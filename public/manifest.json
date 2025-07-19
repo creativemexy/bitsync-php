@@ -1,0 +1,26 @@
+{
+  "name": "BitSync Group",
+  "short_name": "BitSync",
+  "description": "Global technology powerhouse delivering cutting-edge solutions",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e40af",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "favicon-16x16.jpg",
+      "sizes": "16x16",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "favicon-32x32.jpg",
+      "sizes": "32x32",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "favicon.jpg",
+      "sizes": "any",
+      "type": "image/jpeg"
+    }
+  ]
+} 
