@@ -129,8 +129,8 @@ The website is fully responsive and optimized for:
 ## 📞 Support
 
 For support or questions, please contact:
-- Email: [your-email@example.com]
-- Website: [your-website.com]
+- Email: hello@bitsynchgroup.com
+- Website: https://www.bitsynchgroup.com
 
 ## 📄 License
 

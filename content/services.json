@@ -1,0 +1,24 @@
+{
+    "services": {
+        "web_development": {
+            "title": "Web Development",
+            "description": "Custom web applications and digital experiences",
+            "features": ["React", "Vue.js", "Node.js", "PHP", "Laravel"]
+        },
+        "mobile_development": {
+            "title": "Mobile Development",
+            "description": "Native and cross-platform mobile applications",
+            "features": ["iOS", "Android", "React Native", "Flutter"]
+        },
+        "cloud_solutions": {
+            "title": "Cloud Solutions",
+            "description": "Scalable cloud infrastructure and services",
+            "features": ["AWS", "Azure", "Google Cloud", "DevOps"]
+        },
+        "blockchain": {
+            "title": "Blockchain Technology",
+            "description": "Decentralized solutions and smart contracts",
+            "features": ["Ethereum", "Hyperledger", "Smart Contracts", "DeFi"]
+        }
+    }
+} 
