@@ -127,13 +127,83 @@
     </div>
 </footer>
 
-<!-- Floating Action Button -->
+<!-- Live Chat System -->
 <div class="fixed bottom-8 right-8 z-50">
-    <button class="floating-action-btn w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-110 flex items-center justify-center text-white group">
-        <svg class="w-6 h-6 transition-transform duration-300 group-hover:rotate-45" fill="currentColor" viewBox="0 0 20 20">
+    <!-- Chat Toggle Button -->
+    <button id="chatToggle" class="floating-action-btn w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-110 flex items-center justify-center text-white group">
+        <svg id="chatIcon" class="w-6 h-6 transition-transform duration-300 group-hover:rotate-45" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"></path>
         </svg>
+        <svg id="closeIcon" class="w-6 h-6 hidden transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+        <!-- Online Status Indicator -->
+        <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
     </button>
+
+    <!-- Chat Window -->
+    <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-80 h-96 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col">
+        <!-- Chat Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-t-2xl flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Live Chat</h3>
+                    <p class="text-xs text-blue-100">Online • Responds in seconds</p>
+                </div>
+            </div>
+            <button id="minimizeChat" class="text-white/80 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Chat Messages -->
+        <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-4 max-h-64">
+            <!-- Welcome Message -->
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="bg-slate-100 dark:bg-slate-700 rounded-2xl px-4 py-2 max-w-xs">
+                    <p class="text-sm text-slate-700 dark:text-slate-300">👋 Hi! Welcome to BitSync Group. How can I help you today?</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Just now</p>
+                </div>
+            </div>
+
+            <!-- Quick Response Options -->
+            <div class="flex flex-wrap gap-2">
+                <button class="quick-response bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-xs hover:bg-blue-100 dark:hover:bg-slate-600 transition-colors" data-message="I need help with web development">
+                    Web Development
+                </button>
+                <button class="quick-response bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-xs hover:bg-blue-100 dark:hover:bg-slate-600 transition-colors" data-message="Tell me about your services">
+                    Our Services
+                </button>
+                <button class="quick-response bg-blue-50 dark:bg-slate-700 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-xs hover:bg-blue-100 dark:hover:bg-slate-600 transition-colors" data-message="I want to get a quote">
+                    Get Quote
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="p-4 border-t border-slate-200 dark:border-slate-700">
+            <form id="chatForm" class="flex space-x-2">
+                <input type="text" id="chatInput" placeholder="Type your message..." class="flex-1 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white px-3 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-slate-200 dark:border-slate-600" maxlength="500">
+                <button type="submit" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!-- Custom Cursor -->
