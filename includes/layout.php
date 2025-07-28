@@ -3,7 +3,7 @@ $current_page = $_GET['page'] ?? 'home';
 require_once 'includes/content.php';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,6 +22,7 @@ require_once 'includes/content.php';
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -200,7 +201,7 @@ require_once 'includes/content.php';
 
     </style>
 </head>
-<body class="min-h-screen bg-background">
+<body class="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors duration-300">
     <?php include 'includes/header.php'; ?>
     
     <main>
@@ -462,5 +463,7 @@ require_once 'includes/content.php';
             }
         });
     </script>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor fixed w-6 h-6 bg-blue-500/20 rounded-full pointer-events-none z-50 transition-all duration-200 ease-out transform -translate-x-1/2 -translate-y-1/2 mix-blend-difference"></div> 
 </body>
 </html> 

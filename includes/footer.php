@@ -1,4 +1,4 @@
-<footer class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-20 relative overflow-hidden">
+<footer class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-white py-20 relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.03"%3E%3Ccircle cx="30" cy="30" r="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
     
@@ -94,10 +94,10 @@
                 </div>
                 
                 <!-- Newsletter Signup -->
-                <div class="bg-slate-800 rounded-xl p-4">
+                <div class="bg-slate-800 dark:bg-slate-700 rounded-xl p-4">
                     <h5 class="font-semibold text-white mb-3">Get Updates</h5>
                     <form class="newsletter-form flex" id="newsletterForm">
-                        <input type="email" name="email" placeholder="Your email" class="flex-1 bg-slate-700 text-white px-3 py-2 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <input type="email" name="email" placeholder="Your email" class="flex-1 bg-slate-700 dark:bg-slate-600 text-white px-3 py-2 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         <button type="submit" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-r-lg text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -110,7 +110,7 @@
         </div>
 
         <!-- Bottom Section -->
-        <div class="border-t border-slate-800 pt-8">
+        <div class="border-t border-slate-800 dark:border-slate-700 pt-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="text-slate-400 text-sm mb-4 md:mb-0">
                     <p>&copy; <?php echo date('Y'); ?> BitSync Group. All rights reserved. | Privacy Policy | Terms of Service</p>
