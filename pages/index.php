@@ -313,14 +313,14 @@ $page_description = "BitSync Group is a global technology powerhouse delivering 
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Consumer Electronics -->
+                <!-- Advanced Electronics and Smart Solutions for Modern Living -->
                 <div class="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-slate-100 overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div class="relative p-8">
                         <div class="w-full h-56 mb-6 rounded-xl overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50 relative">
                             <img 
                                 src="assets/consumer-electronics.jpg" 
-                                alt="Consumer Electronics"
+                                alt="Advanced Electronics and Smart Solutions for Modern Living"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                             />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
@@ -330,7 +330,7 @@ $page_description = "BitSync Group is a global technology powerhouse delivering 
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-black text-slate-900 mb-4">Consumer Electronics</h3>
+                        <h3 class="text-2xl font-black text-slate-900 mb-4">Advanced Electronics and Smart Solutions for Modern Living</h3>
                         <p class="text-slate-600 leading-relaxed mb-6">Cutting-edge devices and smart solutions for modern living with AI-powered intelligence</p>
                         <div class="flex items-center text-blue-600 font-semibold group-hover:translate-x-2 transition-transform duration-300">
                             Learn More
