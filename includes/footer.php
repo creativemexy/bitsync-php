@@ -96,14 +96,15 @@
                 <!-- Newsletter Signup -->
                 <div class="bg-slate-800 rounded-xl p-4">
                     <h5 class="font-semibold text-white mb-3">Get Updates</h5>
-                    <form class="newsletter-form flex">
-                        <input type="email" placeholder="Your email" class="flex-1 bg-slate-700 text-white px-3 py-2 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <form class="newsletter-form flex" id="newsletterForm">
+                        <input type="email" name="email" placeholder="Your email" class="flex-1 bg-slate-700 text-white px-3 py-2 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         <button type="submit" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-r-lg text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                             </svg>
                         </button>
                     </form>
+                    <div id="newsletterMessage" class="mt-3 text-sm hidden"></div>
                 </div>
             </div>
         </div>

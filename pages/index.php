@@ -313,14 +313,14 @@ $page_description = "BitSync Group is a global technology powerhouse delivering 
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Advanced Electronics and Smart Solutions for Modern Living -->
+                <!-- Consumer Electronics -->
                 <div class="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-slate-100 overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div class="relative p-8">
                         <div class="w-full h-56 mb-6 rounded-xl overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50 relative">
                             <img 
                                 src="assets/consumer-electronics.jpg" 
-                                alt="Advanced Electronics and Smart Solutions for Modern Living"
+                                alt="Advanced Electronics and Smart Solutions"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                             />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
@@ -331,7 +331,33 @@ $page_description = "BitSync Group is a global technology powerhouse delivering 
                             </svg>
                         </div>
                         <h3 class="text-2xl font-black text-slate-900 mb-4">Advanced Electronics and Smart Solutions for Modern Living</h3>
-                        <p class="text-slate-600 leading-relaxed mb-6">Cutting-edge devices and smart solutions for modern living with AI-powered intelligence</p>
+                        <p class="text-slate-600 leading-relaxed mb-6">Innovative technologies designed to enhance everyday life- from intelligent home automation and next-gen wearables to connected systems and industrial IoT platforms.</p>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-sm text-slate-600">
+                                <div class="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                                <span>Smart Home Automation</span>
+                            </div>
+                            <div class="flex items-center text-sm text-slate-600">
+                                <div class="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                                <span>IoT & Embedded Device Development</span>
+                            </div>
+                            <div class="flex items-center text-sm text-slate-600">
+                                <div class="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                                <span>Wearable & Health Tech</span>
+                            </div>
+                            <div class="flex items-center text-sm text-slate-600">
+                                <div class="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                                <span>Consumer & Industrial Electronics</span>
+                            </div>
+                            <div class="flex items-center text-sm text-slate-600">
+                                <div class="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                                <span>Connected & Sensor-Based Systems</span>
+                            </div>
+                            <div class="flex items-center text-sm text-slate-600">
+                                <div class="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                                <span>Edge Computing & Smart Interfaces</span>
+                            </div>
+                        </div>
                         <div class="flex items-center text-blue-600 font-semibold group-hover:translate-x-2 transition-transform duration-300">
                             Learn More
                             <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

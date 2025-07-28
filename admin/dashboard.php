@@ -99,13 +99,13 @@ $all_content = getAllContent();
         <div class="border-b border-gray-200 mb-8">
             <nav class="-mb-px flex space-x-8">
                 <?php
-                $pages = ['home', 'about', 'services', 'contact'];
+                $pages = ['home', 'about', 'services', 'contact', 'newsletter'];
                 foreach ($pages as $page):
                     $is_active = $current_page === $page;
                 ?>
                     <a href="?page=<?php echo $page; ?>" 
                        class="<?php echo $is_active ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'; ?> whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
-                        <?php echo ucfirst($page); ?>
+                        <?php echo $page === 'newsletter' ? 'Newsletter Subscribers' : ucfirst($page); ?>
                     </a>
                 <?php endforeach; ?>
             </nav>
@@ -257,6 +257,111 @@ $all_content = getAllContent();
                             </div>
                         <?php endforeach; ?>
                     </div>
+                <?php endif; ?>
+
+                <?php if ($current_page === 'newsletter'): ?>
+                    <!-- Newsletter Subscribers -->
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-medium text-gray-900">Newsletter Subscribers</h3>
+                            <div class="flex space-x-2">
+                                <button type="button" onclick="exportSubscribers()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 text-sm">
+                                    Export CSV
+                                </button>
+                                <button type="button" onclick="refreshSubscribers()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm">
+                                    Refresh
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="subscribersList" class="bg-gray-50 rounded-lg p-4">
+                            <div class="text-center text-gray-500">Loading subscribers...</div>
+                        </div>
+                    </div>
+
+                    <script>
+                        // Load subscribers on page load
+                        document.addEventListener('DOMContentLoaded', function() {
+                            loadSubscribers();
+                        });
+
+                        function loadSubscribers() {
+                            fetch('../newsletter-subscribers.php?action=list&admin_key=bitsync2024')
+                                .then(response => response.json())
+                                .then(data => {
+                                    const container = document.getElementById('subscribersList');
+                                    if (data.success && data.subscribers.length > 0) {
+                                        container.innerHTML = `
+                                            <div class="overflow-x-auto">
+                                                <table class="min-w-full divide-y divide-gray-200">
+                                                    <thead class="bg-gray-100">
+                                                        <tr>
+                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subscribed</th>
+                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
+                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="bg-white divide-y divide-gray-200">
+                                                        ${data.subscribers.map(subscriber => `
+                                                            <tr>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${subscriber.email}</td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${subscriber.subscribed_at}</td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${subscriber.ip_address}</td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    <button onclick="deleteSubscriber('${subscriber.email}')" class="text-red-600 hover:text-red-900">Delete</button>
+                                                                </td>
+                                                            </tr>
+                                                        `).join('')}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="mt-4 text-sm text-gray-600">
+                                                Total subscribers: ${data.subscribers.length}
+                                            </div>
+                                        `;
+                                    } else {
+                                        container.innerHTML = '<div class="text-center text-gray-500">No subscribers found.</div>';
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error loading subscribers:', error);
+                                    document.getElementById('subscribersList').innerHTML = '<div class="text-center text-red-500">Error loading subscribers.</div>';
+                                });
+                        }
+
+                        function deleteSubscriber(email) {
+                            if (confirm('Are you sure you want to delete this subscriber?')) {
+                                fetch('../newsletter-subscribers.php?action=delete&admin_key=bitsync2024', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ email: email })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        loadSubscribers();
+                                    } else {
+                                        alert('Error deleting subscriber: ' + data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    alert('Error deleting subscriber.');
+                                });
+                            }
+                        }
+
+                        function exportSubscribers() {
+                            window.open('../newsletter-subscribers.php?action=export&admin_key=bitsync2024', '_blank');
+                        }
+
+                        function refreshSubscribers() {
+                            loadSubscribers();
+                        }
+                    </script>
                 <?php endif; ?>
 
                 <!-- Submit Button -->
