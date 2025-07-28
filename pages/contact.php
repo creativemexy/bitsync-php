@@ -81,74 +81,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     <?php endif; ?>
 
-                    <form method="POST" class="space-y-6">
+                    <form id="contactForm" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                                <input 
-                                    type="text" 
-                                    id="name" 
-                                    name="name" 
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
                                     required
                                     class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Your full name"
                                 >
                             </div>
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
-                                <input 
-                                    type="email" 
-                                    id="email" 
-                                    name="email" 
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
                                     required
                                     class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="your.email@company.com"
                                 >
                             </div>
                         </div>
-
-                        <div>
-                            <label for="company" class="block text-sm font-medium text-gray-700 mb-2">Company</label>
-                            <input 
-                                type="text" 
-                                id="company" 
-                                name="company"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Your company name"
-                            >
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                            </div>
+                            <div>
+                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                                <input
+                                    type="text"
+                                    id="subject"
+                                    name="subject"
+                                    required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                            </div>
                         </div>
-
-                        <div>
-                            <label for="service" class="block text-sm font-medium text-gray-700 mb-2">Service of Interest</label>
-                            <select 
-                                id="service" 
-                                name="service"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                                <option value="">Select a service</option>
-                                <option value="consumer-electronics">Consumer Electronics</option>
-                                <option value="enterprise-solutions">Enterprise Solutions</option>
-                                <option value="web-development">Web Development</option>
-                                <option value="mobile-development">Mobile Development</option>
-                                <option value="blockchain">Blockchain Technology</option>
-                                <option value="consulting">Consulting Services</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-
+                        
                         <div>
                             <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
-                            <textarea 
-                                id="message" 
-                                name="message" 
+                            <textarea
+                                id="message"
+                                name="message"
                                 rows="6"
                                 required
                                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Tell us about your project or how we can help..."
+                                placeholder="Tell us about your project or inquiry..."
                             ></textarea>
                         </div>
-
-                        <button 
+                        
+                        <div id="formMessage" class="hidden p-4 rounded-md"></div>
+                        
+                        <button
                             type="submit"
                             class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-md hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
                         >
@@ -171,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Office Location</h3>
-                                <p class="text-gray-600">22 Airport road<br>Mafoluku Lagos<br>Nigeria</p>
+                                <p class="text-gray-600"><?php echo getSetting('contact_address', '22 Airport road, Mafoluku Lagos, Nigeria'); ?></p>
                             </div>
                         </div>
 
@@ -183,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Email Us</h3>
-                                <p class="text-gray-600">hello@bitsyncgroup.com<br>support@bitsyncgroup.com</p>
+                                <p class="text-gray-600"><?php echo getSetting('contact_email', 'hello@bitsyncgroup.com'); ?><br><?php echo getSetting('contact_email_support', 'support@bitsyncgroup.com'); ?></p>
                             </div>
                         </div>
 
@@ -195,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Call Us</h3>
-                                <p class="text-gray-600">+234 (803) 381-8401<br>Mon-Fri: 9:00 AM - 6:00 PM WAT</p>
+                                <p class="text-gray-600"><?php echo getSetting('contact_phone', '+234 (803) 381-8401'); ?><br><?php echo getSetting('contact_hours', 'Mon-Fri: 9:00 AM - 6:00 PM WAT'); ?></p>
                             </div>
                         </div>
                     </div>
@@ -249,3 +242,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </section>
 </div> 
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contactForm');
+    const formMessage = document.getElementById('formMessage');
+    
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            
+            // Hide previous messages
+            formMessage.classList.add('hidden');
+            
+            // Get form data
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData);
+            
+            // Submit form
+            fetch('contact-submit.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Show success message
+                    formMessage.textContent = result.message;
+                    formMessage.className = 'p-4 rounded-md bg-green-100 text-green-700 border border-green-200';
+                    contactForm.reset();
+                } else {
+                    // Show error message
+                    formMessage.textContent = result.message;
+                    formMessage.className = 'p-4 rounded-md bg-red-100 text-red-700 border border-red-200';
+                }
+                formMessage.classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                formMessage.textContent = 'An error occurred. Please try again.';
+                formMessage.className = 'p-4 rounded-md bg-red-100 text-red-700 border border-red-200';
+                formMessage.classList.remove('hidden');
+            })
+            .finally(() => {
+                // Reset button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+});
+</script> 

@@ -79,7 +79,7 @@ $page_description = "Explore BitSync Group's comprehensive range of technology s
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-black text-slate-900 mb-4">Consumer Electronics</h3>
+                        <h3 class="text-xl font-black text-slate-900 mb-4">Advanced Electronics and  Smart Solutions for Modern Living</h3>
                         <p class="text-slate-600 leading-relaxed mb-6">Cutting-edge devices and smart solutions for modern living, including IoT devices, smart home systems, and wearable technology.</p>
                         <ul class="text-sm text-slate-600 space-y-2 mb-6">
                             <li class="flex items-center">
@@ -100,10 +100,12 @@ $page_description = "Explore BitSync Group's comprehensive range of technology s
                             </li>
                         </ul>
                         <div class="flex items-center text-blue-600 font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                            Learn More
-                            <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                            </svg>
+                            <a href="?page=web-development" class="flex items-center">
+                                Learn More
+                                <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                </svg>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -123,7 +125,7 @@ $page_description = "Explore BitSync Group's comprehensive range of technology s
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-semibold mb-3">Enterprise Solutions</h3>
+                        <h3 class="text-xl font-black text-slate-900 mb-3">Enterprise Solutions</h3>
                         <p class="text-gray-600 mb-4">Scalable cloud infrastructure and business transformation solutions that drive operational efficiency and growth.</p>
                         <ul class="text-sm text-gray-600 space-y-1 mb-4">
                             <li>• Cloud Infrastructure</li>
@@ -131,7 +133,7 @@ $page_description = "Explore BitSync Group's comprehensive range of technology s
                             <li>• Enterprise Software</li>
                             <li>• Business Process Automation</li>
                         </ul>
-                        <a href="/contact" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
+                        <a href="?page=cloud-solutions" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
                             Learn More 
                             <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -155,7 +157,7 @@ $page_description = "Explore BitSync Group's comprehensive range of technology s
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-semibold mb-3">Web Development</h3>
+                        <h3 class="text-xl font-black text-slate-900 mb-3">Web Development</h3>
                         <p class="text-gray-600 mb-4">Custom web applications and digital experiences built with modern technologies and best practices.</p>
                         <ul class="text-sm text-gray-600 space-y-1 mb-4">
                             <li>• Custom Web Applications</li>
@@ -195,7 +197,7 @@ $page_description = "Explore BitSync Group's comprehensive range of technology s
                             <li>• Cross-platform Apps</li>
                             <li>• Mobile UI/UX Design</li>
                         </ul>
-                        <a href="/contact" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
+                        <a href="?page=mobile-development" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
                             Learn More 
                             <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -227,7 +229,7 @@ $page_description = "Explore BitSync Group's comprehensive range of technology s
                             <li>• NFT Development</li>
                             <li>• Cryptocurrency Integration</li>
                         </ul>
-                        <a href="/contact" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
+                        <a href="?page=blockchain-technology" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
                             Learn More 
                             <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -259,7 +261,7 @@ $page_description = "Explore BitSync Group's comprehensive range of technology s
                             <li>• IT Infrastructure Planning</li>
                             <li>• Security Consulting</li>
                         </ul>
-                        <a href="/contact" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
+                        <a href="?page=digital-transformation" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
                             Learn More 
                             <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

@@ -1,122 +1,287 @@
 <?php
-session_start();
-require_once 'config.php';
+/**
+ * BitSync Group Admin Interface
+ * Main admin dashboard and authentication
+ */
 
-// Check if already logged in
-if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-    header('Location: dashboard.php');
+session_start();
+
+// Load environment variables
+function loadEnv($file) {
+    if (!file_exists($file)) {
+        return false;
+    }
+    
+    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos($line, '#') === 0) continue;
+        
+        list($name, $value) = explode('=', $line, 2);
+        $name = trim($name);
+        $value = trim($value, '"\'');
+        
+        if (!array_key_exists($name, $_ENV)) {
+            $_ENV[$name] = $value;
+        }
+    }
+    return true;
+}
+
+loadEnv(__DIR__ . '/../.env');
+
+require_once __DIR__ . '/../includes/Database.php';
+require_once __DIR__ . '/../includes/ContentManager.php';
+
+// Check if user is logged in
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header('Location: login.php');
     exit;
 }
 
-$error = '';
+$contentManager = new ContentManager();
 
-// Handle login
-if ($_POST) {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-    
-    if ($username === ADMIN_USERNAME && $password === ADMIN_PASSWORD) {
-        $_SESSION['admin_logged_in'] = true;
-        $_SESSION['admin_username'] = $username;
-        header('Location: dashboard.php');
-        exit;
-    } else {
-        $error = 'Invalid credentials. Please try again.';
-    }
-}
+// Get dashboard stats
+$db = Database::getInstance();
+$stats = [
+    'pages' => $db->fetchOne("SELECT COUNT(*) as count FROM content_pages")['count'] ?? 0,
+    'subscribers' => $db->fetchOne("SELECT COUNT(*) as count FROM newsletter_subscribers WHERE is_active = true")['count'] ?? 0,
+    'contacts' => $db->fetchOne("SELECT COUNT(*) as count FROM contact_submissions WHERE is_read = false")['count'] ?? 0,
+    'services' => $db->fetchOne("SELECT COUNT(*) as count FROM services WHERE is_active = true")['count'] ?? 0
+];
+
+$recentPages = $db->fetchAll("SELECT page_key, title, updated_at FROM content_pages ORDER BY updated_at DESC LIMIT 5");
+$recentContacts = $db->fetchAll("SELECT name, email, subject, created_at FROM contact_submissions ORDER BY created_at DESC LIMIT 5");
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BitSync Admin - Login</title>
+    <title>BitSync Admin - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF'
+                    }
+                }
+            }
         }
-        .glass-effect {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.1);
-        }
-    </style>
+    </script>
 </head>
-<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
-        <!-- Login Card -->
-        <div class="glass-effect rounded-2xl p-8 shadow-2xl border border-white/20">
-            <!-- Logo -->
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl mb-4">
-                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                    </svg>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-xl font-bold text-gray-900">BitSync Admin</h1>
+                    </div>
+                    <div class="hidden md:block ml-10">
+                        <div class="flex items-baseline space-x-4">
+                            <a href="index.php" class="bg-primary text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                            <a href="pages.php" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Pages</a>
+                            <a href="services.php" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Services</a>
+                            <a href="subscribers.php" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Subscribers</a>
+                            <a href="contacts.php" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Contacts</a>
+                            <a href="settings.php" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Settings</a>
+                        </div>
+                    </div>
                 </div>
-                <h1 class="text-3xl font-black text-white mb-2">BitSync Admin</h1>
-                <p class="text-white/80">Content Management System</p>
+                <div class="flex items-center">
+                    <span class="text-gray-700 text-sm mr-4">Welcome, <?php echo htmlspecialchars($_SESSION['admin_username'] ?? 'Admin'); ?></span>
+                    <a href="logout.php" class="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="px-4 py-6 sm:px-0">
+            <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p class="mt-2 text-gray-600">Welcome to your BitSync content management system</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-file-alt text-3xl text-blue-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Content Pages</dt>
+                                <dd class="text-lg font-medium text-gray-900"><?php echo $stats['pages']; ?></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-5 py-3">
+                    <div class="text-sm">
+                        <a href="pages.php" class="font-medium text-blue-700 hover:text-blue-900">View all pages</a>
+                    </div>
+                </div>
             </div>
 
-            <!-- Error Message -->
-            <?php if ($error): ?>
-                <div class="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-3 rounded-lg mb-6">
-                    <?php echo htmlspecialchars($error); ?>
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-envelope text-3xl text-green-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Newsletter Subscribers</dt>
+                                <dd class="text-lg font-medium text-gray-900"><?php echo $stats['subscribers']; ?></dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
-            <?php endif; ?>
-
-            <!-- Login Form -->
-            <form method="POST" class="space-y-6">
-                <div>
-                    <label for="username" class="block text-white font-semibold mb-2">Username</label>
-                    <input 
-                        type="text" 
-                        id="username" 
-                        name="username" 
-                        required
-                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-300"
-                        placeholder="Enter username"
-                    >
+                <div class="bg-gray-50 px-5 py-3">
+                    <div class="text-sm">
+                        <a href="subscribers.php" class="font-medium text-green-700 hover:text-green-900">View subscribers</a>
+                    </div>
                 </div>
+            </div>
 
-                <div>
-                    <label for="password" class="block text-white font-semibold mb-2">Password</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        required
-                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-300"
-                        placeholder="Enter password"
-                    >
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-comments text-3xl text-yellow-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Unread Messages</dt>
+                                <dd class="text-lg font-medium text-gray-900"><?php echo $stats['contacts']; ?></dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
+                <div class="bg-gray-50 px-5 py-3">
+                    <div class="text-sm">
+                        <a href="contacts.php" class="font-medium text-yellow-700 hover:text-yellow-900">View messages</a>
+                    </div>
+                </div>
+            </div>
 
-                <button 
-                    type="submit"
-                    class="w-full bg-white text-purple-600 font-bold py-3 px-6 rounded-xl hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg"
-                >
-                    Sign In
-                </button>
-            </form>
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-cogs text-3xl text-purple-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Active Services</dt>
+                                <dd class="text-lg font-medium text-gray-900"><?php echo $stats['services']; ?></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-5 py-3">
+                    <div class="text-sm">
+                        <a href="services.php" class="font-medium text-purple-700 hover:text-purple-900">View services</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <!-- Footer -->
-            <div class="text-center mt-8 text-white/60 text-sm">
-                <p>Secure access to BitSync Group CMS</p>
+        <!-- Recent Activity -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Recent Pages -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Recent Page Updates</h3>
+                </div>
+                <div class="p-6">
+                    <?php if (!empty($recentPages)): ?>
+                        <div class="space-y-4">
+                            <?php foreach ($recentPages as $page): ?>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($page['title']); ?></p>
+                                        <p class="text-sm text-gray-500"><?php echo htmlspecialchars($page['page_key']); ?></p>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        <?php echo date('M j, Y', strtotime($page['updated_at'])); ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <p class="text-gray-500 text-sm">No recent page updates</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Recent Contacts -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Recent Contact Messages</h3>
+                </div>
+                <div class="p-6">
+                    <?php if (!empty($recentContacts)): ?>
+                        <div class="space-y-4">
+                            <?php foreach ($recentContacts as $contact): ?>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($contact['name']); ?></p>
+                                        <p class="text-sm text-gray-500"><?php echo htmlspecialchars($contact['subject'] ?: 'No subject'); ?></p>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        <?php echo date('M j, Y', strtotime($contact['created_at'])); ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <p class="text-gray-500 text-sm">No recent contact messages</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-8 bg-white shadow rounded-lg">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Quick Actions</h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <a href="pages.php?action=new" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                        <i class="fas fa-plus mr-2"></i>
+                        Create New Page
+                    </a>
+                    <a href="services.php?action=new" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                        <i class="fas fa-cog mr-2"></i>
+                        Add New Service
+                    </a>
+                    <a href="settings.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700">
+                        <i class="fas fa-cog mr-2"></i>
+                        Update Settings
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Add some interactive effects
+        // Add any JavaScript for interactivity here
         document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    this.parentElement.classList.add('scale-105');
-                });
-                input.addEventListener('blur', function() {
-                    this.parentElement.classList.remove('scale-105');
-                });
-            });
+            // Auto-refresh stats every 30 seconds
+            setInterval(function() {
+                // You can add AJAX calls here to refresh stats
+            }, 30000);
         });
     </script>
 </body>

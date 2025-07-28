@@ -46,12 +46,12 @@
             <div>
                 <h4 class="text-lg font-black mb-6 text-white">Services</h4>
                 <ul class="space-y-3">
-                    <li><a href="?page=services" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Web Development</a></li>
-                    <li><a href="?page=services" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Mobile Development</a></li>
-                    <li><a href="?page=services" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Cloud Solutions</a></li>
-                    <li><a href="?page=services" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Blockchain Technology</a></li>
-                    <li><a href="?page=services" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">AI & Machine Learning</a></li>
-                    <li><a href="?page=services" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Digital Transformation</a></li>
+                    <li><a href="?page=web-development" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Web Development</a></li>
+                    <li><a href="?page=mobile-development" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Mobile Development</a></li>
+                    <li><a href="?page=cloud-solutions" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Cloud Solutions</a></li>
+                    <li><a href="?page=blockchain-technology" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Blockchain Technology</a></li>
+                    <li><a href="?page=ai-machine-learning" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">AI & Machine Learning</a></li>
+                    <li><a href="?page=digital-transformation" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Digital Transformation</a></li>
                 </ul>
             </div>
 
@@ -62,9 +62,9 @@
                     <li><a href="?page=about" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">About Us</a></li>
                     <li><a href="?page=solutions" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Solutions</a></li>
                     <li><a href="?page=contact" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Contact</a></li>
-                    <li><a href="#" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Careers</a></li>
-                    <li><a href="#" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Blog</a></li>
-                    <li><a href="#" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Case Studies</a></li>
+                    <li><a href="?page=careers" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Careers</a></li>
+                    <li><a href="?page=blog" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Blog</a></li>
+                    <li><a href="?page=case-studies" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Case Studies</a></li>
                 </ul>
             </div>
 
@@ -72,26 +72,41 @@
             <div>
                 <h4 class="text-lg font-black mb-6 text-white">Stay Connected</h4>
                 <div class="space-y-4 mb-6">
-                    <div class="flex items-center text-slate-300">
-                        <svg class="w-5 h-5 mr-3 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
-                        </svg>
-                        <span>22 Airport road, Mafoluku Lagos</span>
+                    <!-- Contact Info -->
+                    <div class="col-span-1 md:col-span-2 lg:col-span-1">
+                        <h4 class="text-lg font-black mb-6 text-white">Contact Info</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-400 mt-1 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <div>
+                                    <p class="text-slate-300"><?php echo getSetting('contact_address', 'Lagos, Nigeria'); ?></p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-400 mt-1 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                </svg>
+                                <div>
+                                    <a href="mailto:<?php echo getSetting('contact_email', 'info@bitsync.com'); ?>" class="text-slate-300 hover:text-white transition-colors duration-300">
+                                        <?php echo getSetting('contact_email', 'info@bitsync.com'); ?>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-400 mt-1 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
+                                </svg>
+                                <div>
+                                    <a href="tel:<?php echo str_replace([' ', '(', ')', '-'], '', getSetting('contact_phone', '+234 (803) 381-8401')); ?>" class="text-slate-300 hover:text-white transition-colors duration-300">
+                                        <?php echo getSetting('contact_phone', '+234 (803) 381-8401'); ?>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex items-center text-slate-300">
-                        <svg class="w-5 h-5 mr-3 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
-                        </svg>
-                        <span>hello@bitsyncgroup.com</span>
-                    </div>
-                    <div class="flex items-center text-slate-300">
-                        <svg class="w-5 h-5 mr-3 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
-                        </svg>
-                        <span>+234 (803) 381-8401</span>
-                    </div>
-                </div>
                 
                 <!-- Newsletter Signup -->
                 <div class="bg-slate-800 dark:bg-slate-700 rounded-xl p-4">
@@ -126,6 +141,63 @@
         </div>
     </div>
 </footer>
+
+<script>
+// Newsletter form handling
+document.addEventListener('DOMContentLoaded', function() {
+    const newsletterForm = document.getElementById('newsletterForm');
+    const newsletterMessage = document.getElementById('newsletterMessage');
+    
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = newsletterForm.querySelector('input[name="email"]').value;
+            const submitBtn = newsletterForm.querySelector('button[type="submit"]');
+            const originalHTML = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            submitBtn.disabled = true;
+            
+            // Hide previous messages
+            newsletterMessage.classList.add('hidden');
+            
+            // Submit to database
+            fetch('newsletter-subscribe.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    newsletterMessage.textContent = result.message;
+                    newsletterMessage.className = 'mt-3 text-sm text-green-400';
+                    newsletterForm.reset();
+                } else {
+                    newsletterMessage.textContent = result.message;
+                    newsletterMessage.className = 'mt-3 text-sm text-red-400';
+                }
+                newsletterMessage.classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                newsletterMessage.textContent = 'An error occurred. Please try again.';
+                newsletterMessage.className = 'mt-3 text-sm text-red-400';
+                newsletterMessage.classList.remove('hidden');
+            })
+            .finally(() => {
+                // Reset button state
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+});
+</script>
 
 <!-- Live Chat System -->
 <div class="fixed bottom-8 right-8 z-50">

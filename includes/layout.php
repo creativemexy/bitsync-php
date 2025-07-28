@@ -1,5 +1,5 @@
 <?php
-$current_page = $_GET['page'] ?? 'home';
+// Load content system
 require_once 'includes/content.php';
 ?>
 <!DOCTYPE html>
@@ -7,7 +7,7 @@ require_once 'includes/content.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($page_title) ? $page_title . ' - BitSync Group' : 'BitSync Group - Technology Solutions'; ?></title>
+    <title><?php echo isset($page_title) ? $page_title : 'BitSync Group - Technology Solutions'; ?></title>
     <meta name="description" content="<?php echo isset($page_description) ? $page_description : 'BitSync Group is a global technology powerhouse delivering cutting-edge solutions in consumer electronics, enterprise systems, and innovative consulting services.'; ?>">
     
     <!-- Favicon -->
