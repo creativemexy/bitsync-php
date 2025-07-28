@@ -171,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Office Location</h3>
-                                <p class="text-gray-600">123 Technology Drive<br>San Francisco, CA 94105<br>United States</p>
+                                <p class="text-gray-600">22 Airport road<br>Mafoluku Lagos<br>Nigeria</p>
                             </div>
                         </div>
 
@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Email Us</h3>
-                                <p class="text-gray-600">info@bitsyncgroup.com<br>support@bitsyncgroup.com</p>
+                                <p class="text-gray-600">hello@bitsyncgroup.com<br>support@bitsyncgroup.com</p>
                             </div>
                         </div>
 
@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Call Us</h3>
-                                <p class="text-gray-600">+1 (555) 123-4567<br>Mon-Fri: 9:00 AM - 6:00 PM PST</p>
+                                <p class="text-gray-600">+234 (803) 381-8401<br>Mon-Fri: 9:00 AM - 6:00 PM WAT</p>
                             </div>
                         </div>
                     </div>
@@ -242,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         </svg>
                         <p class="text-gray-600">Interactive map would be embedded here</p>
-                        <p class="text-sm text-gray-500 mt-2">123 Technology Drive, San Francisco, CA 94105</p>
+                        <p class="text-sm text-gray-500 mt-2">22 Airport road, Mafoluku Lagos, Nigeria</p>
                     </div>
                 </div>
             </div>
