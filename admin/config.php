@@ -60,8 +60,8 @@ $content_structure = [
     ],
     'contact' => [
         'email' => 'info@bitsyncgroup.com',
-        'phone' => '+1 (555) 123-4567',
-        'address' => '123 Tech Street, Innovation City, IC 12345',
+        'phone' => '+234 (803) 381-8401',
+        'address' => '22 Airport road, Mafoluku Lagos',
         'hours' => 'Monday - Friday: 9:00 AM - 6:00 PM'
     ]
 ];
