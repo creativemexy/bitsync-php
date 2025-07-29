@@ -88,6 +88,8 @@ $recentContacts = $db->fetchAll("SELECT name, email, subject, created_at FROM co
                         <a href="subscribers.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Subscribers</a>
                         <a href="contacts.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Contacts</a>
                         <a href="monitoring.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Monitoring</a>
+                        <a href="../analytics-dashboard" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Analytics</a>
+                        <a href="chat-management.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Chat Management</a>
                     </div>
                 </div>
                 <div class="flex items-center">
@@ -188,6 +190,27 @@ $recentContacts = $db->fetchAll("SELECT name, email, subject, created_at FROM co
                 <div class="bg-gray-50 px-5 py-3">
                     <div class="text-sm">
                         <a href="services.php" class="font-medium text-purple-700 hover:text-purple-900">View services</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-chart-line text-3xl text-indigo-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Analytics Dashboard</dt>
+                                <dd class="text-lg font-medium text-gray-900">Live Insights</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-5 py-3">
+                    <div class="text-sm">
+                        <a href="../analytics-dashboard" class="font-medium text-indigo-700 hover:text-indigo-900">View analytics</a>
                     </div>
                 </div>
             </div>

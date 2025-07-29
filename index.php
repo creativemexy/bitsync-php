@@ -62,7 +62,8 @@ $routes = [
     'healthcare-solutions' => 'pages/healthcare-solutions.php',
     'financial-services' => 'pages/financial-services.php',
     'manufacturing-solutions' => 'pages/manufacturing-solutions.php',
-    'retail-ecommerce' => 'pages/retail-ecommerce.php'
+    'retail-ecommerce' => 'pages/retail-ecommerce.php',
+    'analytics-dashboard' => 'pages/analytics-dashboard.php'
 ];
 
 // Check if route exists
