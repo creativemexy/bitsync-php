@@ -58,6 +58,7 @@ $routes = [
     'digital-transformation' => 'pages/digital-transformation.php',
     'careers' => 'pages/careers.php',
     'blog' => 'pages/blog.php',
+    'blog/([^/]+)' => 'pages/blog-post.php',
     'case-studies' => 'pages/case-studies.php',
     'healthcare-solutions' => 'pages/healthcare-solutions.php',
     'financial-services' => 'pages/financial-services.php',

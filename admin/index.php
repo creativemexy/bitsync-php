@@ -90,6 +90,8 @@ $recentContacts = $db->fetchAll("SELECT name, email, subject, created_at FROM co
                         <a href="monitoring.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Monitoring</a>
                         <a href="../analytics-dashboard" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Analytics</a>
                         <a href="chat-management.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Chat Management</a>
+                        <a href="blog-posts.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Blog Posts</a>
+                        <a href="blog-categories.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Categories</a>
                     </div>
                 </div>
                 <div class="flex items-center">
@@ -285,6 +287,14 @@ $recentContacts = $db->fetchAll("SELECT name, email, subject, created_at FROM co
                     <a href="services.php?action=new" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
                         <i class="fas fa-cog mr-2"></i>
                         Add New Service
+                    </a>
+                    <a href="blog-posts.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                        <i class="fas fa-file-alt mr-2"></i>
+                        Create Blog Post
+                    </a>
+                    <a href="blog-categories.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700">
+                        <i class="fas fa-tags mr-2"></i>
+                        Manage Categories
                     </a>
                     <a href="settings.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700">
                         <i class="fas fa-cog mr-2"></i>
