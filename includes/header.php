@@ -45,6 +45,12 @@
 
             <!-- CTA Button and Dark Mode Toggle -->
             <div class="hidden md:flex items-center space-x-4">
+                <!-- Online Status Indicator -->
+                <div class="flex items-center space-x-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                    <div id="onlineStatus" class="w-2 h-2 bg-green-500 rounded-full" title="Online"></div>
+                    <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">PWA</span>
+                </div>
+                
                 <!-- Dark Mode Toggle -->
                 <button id="darkModeToggle" class="w-10 h-10 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white transition-all duration-300">
                     <svg id="sunIcon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

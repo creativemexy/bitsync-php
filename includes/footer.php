@@ -129,6 +129,11 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="text-slate-400 text-sm mb-4 md:mb-0">
                     <p>&copy; <?php echo date('Y'); ?> BitSync Group. All rights reserved. | Privacy Policy | Terms of Service</p>
+                    <p class="mt-1">
+                        <a href="/pwa-install" class="text-blue-400 hover:text-blue-300 transition-colors">
+                            📱 Install App
+                        </a>
+                    </p>
                 </div>
                 <div class="flex items-center space-x-6 text-sm">
                     <span class="text-slate-400">Trusted by 500+ companies worldwide</span>

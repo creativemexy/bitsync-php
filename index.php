@@ -63,7 +63,9 @@ $routes = [
     'financial-services' => 'pages/financial-services.php',
     'manufacturing-solutions' => 'pages/manufacturing-solutions.php',
     'retail-ecommerce' => 'pages/retail-ecommerce.php',
-    'analytics-dashboard' => 'pages/analytics-dashboard.php'
+    'analytics-dashboard' => 'pages/analytics-dashboard.php',
+    'offline' => 'pages/offline.php',
+    'pwa-install' => 'pages/pwa-install.php'
 ];
 
 // Check if route exists
