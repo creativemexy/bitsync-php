@@ -6,8 +6,6 @@
 
 require_once __DIR__ . '/../includes/Database.php';
 
-$db = Database::getInstance();
-
 // Get post slug from URL
 $post_slug = $_GET['slug'] ?? '';
 
@@ -16,81 +14,144 @@ if (empty($post_slug)) {
     exit;
 }
 
-// Get post details
-$post = $db->fetchOne("
-    SELECT 
-        bp.*,
-        bc.name as category_name,
-        bc.slug as category_slug,
-        array_agg(DISTINCT bt.name) as tags
-    FROM blog_posts bp
-    LEFT JOIN blog_categories bc ON bp.category_id = bc.id
-    LEFT JOIN blog_post_tags bpt ON bp.id = bpt.post_id
-    LEFT JOIN blog_tags bt ON bpt.tag_id = bt.id
-    WHERE bp.slug = ? AND bp.status = 'published' AND bp.is_active = true
-    GROUP BY bp.id, bc.name, bc.slug
-", [$post_slug]);
+// Initialize variables
+$post = null;
+$related_posts = [];
+$recent_posts = [];
+$show_fallback = false;
 
-if (!$post) {
-    header('Location: /blog');
-    exit;
+// Check if database tables exist and handle gracefully
+try {
+    $db = Database::getInstance();
+    
+    // Test if blog tables exist
+    $tables_exist = $db->fetchOne("
+        SELECT COUNT(*) as count 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name IN ('blog_posts', 'blog_categories', 'blog_tags')
+    ");
+    
+    if ($tables_exist['count'] < 3) {
+        // Tables don't exist, show fallback content
+        $show_fallback = true;
+    } else {
+        // Tables exist, proceed with normal functionality
+        // Get post details
+        $post = $db->fetchOne("
+            SELECT 
+                bp.*,
+                bc.name as category_name,
+                bc.slug as category_slug,
+                array_agg(DISTINCT bt.name) as tags
+            FROM blog_posts bp
+            LEFT JOIN blog_categories bc ON bp.category_id = bc.id
+            LEFT JOIN blog_post_tags bpt ON bp.id = bpt.post_id
+            LEFT JOIN blog_tags bt ON bpt.tag_id = bt.id
+            WHERE bp.slug = ? AND bp.status = 'published' AND bp.is_active = true
+            GROUP BY bp.id, bc.name, bc.slug
+        ", [$post_slug]);
+
+        if (!$post) {
+            // Post not found, redirect to blog
+            header('Location: /blog');
+            exit;
+        }
+
+        // Increment view count
+        $db->query("UPDATE blog_posts SET view_count = view_count + 1 WHERE id = ?", [$post['id']]);
+
+        // Get related posts
+        $related_posts = $db->fetchAll("
+            SELECT 
+                bp.id,
+                bp.title,
+                bp.slug,
+                bp.excerpt,
+                bp.featured_image,
+                bp.published_at,
+                bc.name as category_name
+            FROM blog_posts bp
+            LEFT JOIN blog_categories bc ON bp.category_id = bc.id
+            WHERE bp.id != ? 
+            AND bp.status = 'published' 
+            AND bp.is_active = true
+            AND (bp.category_id = ? OR bp.id IN (
+                SELECT DISTINCT bpt2.post_id 
+                FROM blog_post_tags bpt1
+                JOIN blog_post_tags bpt2 ON bpt1.tag_id = bpt2.tag_id
+                WHERE bpt1.post_id = ?
+            ))
+            ORDER BY bp.published_at DESC
+            LIMIT 3
+        ", [$post['id'], $post['category_id'], $post['id']]);
+
+        // Get recent posts
+        $recent_posts = $db->fetchAll("
+            SELECT 
+                bp.id,
+                bp.title,
+                bp.slug,
+                bp.published_at,
+                bc.name as category_name
+            FROM blog_posts bp
+            LEFT JOIN blog_categories bc ON bp.category_id = bc.id
+            WHERE bp.id != ? 
+            AND bp.status = 'published' 
+            AND bp.is_active = true
+            ORDER BY bp.published_at DESC
+            LIMIT 5
+        ", [$post['id']]);
+    }
+    
+} catch (Exception $e) {
+    // Database error, show fallback content
+    $show_fallback = true;
 }
 
-// Increment view count
-$db->query("UPDATE blog_posts SET view_count = view_count + 1 WHERE id = ?", [$post['id']]);
-
-// Get related posts
-$related_posts = $db->fetchAll("
-    SELECT 
-        bp.id,
-        bp.title,
-        bp.slug,
-        bp.excerpt,
-        bp.featured_image,
-        bp.published_at,
-        bc.name as category_name
-    FROM blog_posts bp
-    LEFT JOIN blog_categories bc ON bp.category_id = bc.id
-    WHERE bp.id != ? 
-    AND bp.status = 'published' 
-    AND bp.is_active = true
-    AND (bp.category_id = ? OR bp.id IN (
-        SELECT DISTINCT bpt2.post_id 
-        FROM blog_post_tags bpt1
-        JOIN blog_post_tags bpt2 ON bpt1.tag_id = bpt2.tag_id
-        WHERE bpt1.post_id = ?
-    ))
-    ORDER BY bp.published_at DESC
-    LIMIT 3
-", [$post['id'], $post['category_id'], $post['id']]);
-
-// Get recent posts
-$recent_posts = $db->fetchAll("
-    SELECT 
-        bp.id,
-        bp.title,
-        bp.slug,
-        bp.published_at,
-        bc.name as category_name
-    FROM blog_posts bp
-    LEFT JOIN blog_categories bc ON bp.category_id = bc.id
-    WHERE bp.id != ? 
-    AND bp.status = 'published' 
-    AND bp.is_active = true
-    ORDER BY bp.published_at DESC
-    LIMIT 5
-", [$post['id']]);
-
 // Set page metadata
-$page_title = $post['meta_title'] ?? $post['title'] . ' - Blog - BitSync Group';
-$page_description = $post['meta_description'] ?? $post['excerpt'];
-$page_keywords = $post['meta_keywords'] ?? '';
-
-// Calculate reading time (rough estimate: 200 words per minute)
-$word_count = str_word_count(strip_tags($post['content']));
-$reading_time = max(1, round($word_count / 200));
+if ($post) {
+    $page_title = $post['meta_title'] ?? $post['title'] . ' - Blog - BitSync Group';
+    $page_description = $post['meta_description'] ?? $post['excerpt'];
+    $page_keywords = $post['meta_keywords'] ?? '';
+    
+    // Calculate reading time (rough estimate: 200 words per minute)
+    $word_count = str_word_count(strip_tags($post['content']));
+    $reading_time = max(1, round($word_count / 200));
+} else {
+    $page_title = 'Post Not Found - Blog - BitSync Group';
+    $page_description = 'The requested blog post could not be found.';
+}
 ?>
 
+<?php if ($show_fallback): ?>
+<!-- Fallback Content -->
+<section class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-8 mb-8">
+            <div class="flex items-center justify-center mb-4">
+                <svg class="w-12 h-12 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-yellow-800 dark:text-yellow-200 mb-4">Blog System Not Available</h2>
+            <p class="text-yellow-700 dark:text-yellow-300 mb-6">
+                The blog system needs to be initialized. Please set up the database and create blog posts first.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="/blog" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Blog
+                </a>
+                <a href="/admin/login.php" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    <i class="fas fa-cog mr-2"></i>
+                    Admin Panel
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<?php else: ?>
 <!-- Hero Section -->
 <section class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -296,4 +357,5 @@ $reading_time = max(1, round($word_count / 200));
         </div>
     </div>
 </section>
+<?php endif; ?>
 <?php endif; ?> 
