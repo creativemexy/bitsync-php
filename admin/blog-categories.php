@@ -12,97 +12,109 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-require_once __DIR__ . '/../includes/Database.php';
-
-$db = Database::getInstance();
+// Initialize variables
 $message = '';
 $error = '';
+$categories = [];
+$edit_category = null;
+$db_available = false;
 
-// Handle form submissions
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
+// Try to connect to database
+try {
+    require_once __DIR__ . '/../includes/Database.php';
+    $db = Database::getInstance();
+    $db_available = true;
     
-    if ($action === 'create' || $action === 'update') {
-        $name = trim($_POST['name'] ?? '');
-        $slug = trim($_POST['slug'] ?? '');
-        $description = trim($_POST['description'] ?? '');
-        $sort_order = intval($_POST['sort_order'] ?? 0);
-        $is_active = isset($_POST['is_active']) ? 1 : 0;
+    // Handle form submissions only if database is available
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $action = $_POST['action'] ?? '';
         
-        // Generate slug if empty
-        if (empty($slug)) {
-            $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name)));
-        }
-        
-        // Validate required fields
-        if (empty($name)) {
-            $error = 'Category name is required';
-        } else {
-            try {
-                if ($action === 'create') {
-                    $category_data = [
-                        'name' => $name,
-                        'slug' => $slug,
-                        'description' => $description,
-                        'sort_order' => $sort_order,
-                        'is_active' => $is_active
-                    ];
-                    
-                    $db->insert('blog_categories', $category_data);
-                    $message = 'Category created successfully!';
-                } else {
-                    $category_id = intval($_POST['category_id']);
-                    
-                    $category_data = [
-                        'name' => $name,
-                        'slug' => $slug,
-                        'description' => $description,
-                        'sort_order' => $sort_order,
-                        'is_active' => $is_active,
-                        'updated_at' => date('Y-m-d H:i:s')
-                    ];
-                    
-                    $db->update('blog_categories', $category_data, 'id = ?', [$category_id]);
-                    $message = 'Category updated successfully!';
-                }
-            } catch (Exception $e) {
-                $error = 'Error: ' . $e->getMessage();
+        if ($action === 'create' || $action === 'update') {
+            $name = trim($_POST['name'] ?? '');
+            $slug = trim($_POST['slug'] ?? '');
+            $description = trim($_POST['description'] ?? '');
+            $sort_order = intval($_POST['sort_order'] ?? 0);
+            $is_active = isset($_POST['is_active']) ? 1 : 0;
+            
+            // Generate slug if empty
+            if (empty($slug)) {
+                $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name)));
             }
-        }
-    } elseif ($action === 'delete') {
-        $category_id = intval($_POST['category_id'] ?? 0);
-        if ($category_id) {
-            try {
-                // Check if category has posts
-                $post_count = $db->fetchOne("SELECT COUNT(*) as count FROM blog_posts WHERE category_id = ?", [$category_id]);
-                if ($post_count['count'] > 0) {
-                    $error = 'Cannot delete category with existing posts. Please reassign or delete the posts first.';
-                } else {
-                    $db->query("DELETE FROM blog_categories WHERE id = ?", [$category_id]);
-                    $message = 'Category deleted successfully!';
+            
+            // Validate required fields
+            if (empty($name)) {
+                $error = 'Category name is required';
+            } else {
+                try {
+                    if ($action === 'create') {
+                        $category_data = [
+                            'name' => $name,
+                            'slug' => $slug,
+                            'description' => $description,
+                            'sort_order' => $sort_order,
+                            'is_active' => $is_active
+                        ];
+                        
+                        $db->insert('blog_categories', $category_data);
+                        $message = 'Category created successfully!';
+                    } else {
+                        $category_id = intval($_POST['category_id']);
+                        
+                        $category_data = [
+                            'name' => $name,
+                            'slug' => $slug,
+                            'description' => $description,
+                            'sort_order' => $sort_order,
+                            'is_active' => $is_active,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ];
+                        
+                        $db->update('blog_categories', $category_data, 'id = ?', [$category_id]);
+                        $message = 'Category updated successfully!';
+                    }
+                } catch (Exception $e) {
+                    $error = 'Error: ' . $e->getMessage();
                 }
-            } catch (Exception $e) {
-                $error = 'Error deleting category: ' . $e->getMessage();
+            }
+        } elseif ($action === 'delete') {
+            $category_id = intval($_POST['category_id'] ?? 0);
+            if ($category_id) {
+                try {
+                    // Check if category has posts
+                    $post_count = $db->fetchOne("SELECT COUNT(*) as count FROM blog_posts WHERE category_id = ?", [$category_id]);
+                    if ($post_count['count'] > 0) {
+                        $error = 'Cannot delete category with existing posts. Please reassign or delete the posts first.';
+                    } else {
+                        $db->query("DELETE FROM blog_categories WHERE id = ?", [$category_id]);
+                        $message = 'Category deleted successfully!';
+                    }
+                } catch (Exception $e) {
+                    $error = 'Error deleting category: ' . $e->getMessage();
+                }
             }
         }
     }
-}
 
-// Get categories for listing
-$categories = $db->fetchAll("
-    SELECT 
-        bc.*,
-        COUNT(bp.id) as post_count
-    FROM blog_categories bc
-    LEFT JOIN blog_posts bp ON bc.id = bp.category_id AND bp.status = 'published' AND bp.is_active = true
-    GROUP BY bc.id
-    ORDER BY bc.sort_order, bc.name
-");
+    // Get categories for listing
+    $categories = $db->fetchAll("
+        SELECT 
+            bc.*,
+            COUNT(bp.id) as post_count
+        FROM blog_categories bc
+        LEFT JOIN blog_posts bp ON bc.id = bp.category_id AND bp.status = 'published' AND bp.is_active = true
+        GROUP BY bc.id
+        ORDER BY bc.sort_order, bc.name
+    ");
 
-// Get category for editing
-$edit_category = null;
-if (isset($_GET['edit']) && intval($_GET['edit'])) {
-    $edit_category = $db->fetchOne("SELECT * FROM blog_categories WHERE id = ?", [intval($_GET['edit'])]);
+    // Get category for editing
+    if (isset($_GET['edit']) && intval($_GET['edit'])) {
+        $edit_category = $db->fetchOne("SELECT * FROM blog_categories WHERE id = ?", [intval($_GET['edit'])]);
+    }
+    
+} catch (Exception $e) {
+    // Database connection failed
+    $error = 'Database connection failed. Please check your database configuration.';
+    $db_available = false;
 }
 ?>
 
@@ -148,6 +160,38 @@ if (isset($_GET['edit']) && intval($_GET['edit'])) {
             </div>
             <?php endif; ?>
 
+            <?php if (!$db_available): ?>
+            <!-- Database Connection Error -->
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-8 mb-8">
+                <div class="flex items-center justify-center mb-4">
+                    <svg class="w-12 h-12 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-yellow-800 dark:text-yellow-200 mb-4 text-center">Database Connection Required</h2>
+                <p class="text-yellow-700 dark:text-yellow-300 mb-6 text-center">
+                    The blog management system requires a database connection. Please configure your database settings first.
+                </p>
+                <div class="bg-white dark:bg-slate-800 rounded-lg p-4 text-left">
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Setup Steps:</h3>
+                    <ol class="list-decimal list-inside space-y-1 text-sm text-gray-600 dark:text-gray-300">
+                        <li>Configure your database credentials in the <code class="bg-gray-100 dark:bg-slate-700 px-1 rounded">.env</code> file</li>
+                        <li>Run the migration: <code class="bg-gray-100 dark:bg-slate-700 px-1 rounded">php database/migrate-blog.php</code></li>
+                        <li>Refresh this page to access category management</li>
+                    </ol>
+                </div>
+                <div class="flex justify-center space-x-4 mt-6">
+                    <a href="test-db.php" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-database mr-2"></i>
+                        Test Database
+                    </a>
+                    <a href="create-admin.php" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Create Admin User
+                    </a>
+                </div>
+            </div>
+            <?php else: ?>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Form Section -->
                 <div class="lg:col-span-1">
@@ -230,6 +274,13 @@ if (isset($_GET['edit']) && intval($_GET['edit'])) {
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+                                    <?php if (empty($categories)): ?>
+                                    <tr>
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                            No categories found. Create your first category using the form on the left.
+                                        </td>
+                                    </tr>
+                                    <?php else: ?>
                                     <?php foreach ($categories as $category): ?>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -276,12 +327,14 @@ if (isset($_GET['edit']) && intval($_GET['edit'])) {
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </body>

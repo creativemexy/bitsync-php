@@ -12,158 +12,172 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-require_once __DIR__ . '/../includes/Database.php';
-
-$db = Database::getInstance();
+// Initialize variables
 $message = '';
 $error = '';
+$posts = [];
+$categories = [];
+$tags = [];
+$edit_post = null;
+$db_available = false;
 
-// Handle form submissions
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
+// Try to connect to database
+try {
+    require_once __DIR__ . '/../includes/Database.php';
+    $db = Database::getInstance();
+    $db_available = true;
     
-    if ($action === 'create' || $action === 'update') {
-        $title = trim($_POST['title'] ?? '');
-        $slug = trim($_POST['slug'] ?? '');
-        $excerpt = trim($_POST['excerpt'] ?? '');
-        $content = $_POST['content'] ?? '';
-        $category_id = intval($_POST['category_id'] ?? 0);
-        $status = $_POST['status'] ?? 'draft';
-        $is_featured = isset($_POST['is_featured']) ? 1 : 0;
-        $meta_title = trim($_POST['meta_title'] ?? '');
-        $meta_description = trim($_POST['meta_description'] ?? '');
-        $meta_keywords = trim($_POST['meta_keywords'] ?? '');
-        $featured_image = trim($_POST['featured_image'] ?? '');
+    // Handle form submissions only if database is available
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $action = $_POST['action'] ?? '';
         
-        // Generate slug if empty
-        if (empty($slug)) {
-            $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
-        }
-        
-        // Validate required fields
-        if (empty($title) || empty($content)) {
-            $error = 'Title and content are required';
-        } else {
-            try {
-                if ($action === 'create') {
-                    $post_data = [
-                        'title' => $title,
-                        'slug' => $slug,
-                        'excerpt' => $excerpt,
-                        'content' => $content,
-                        'category_id' => $category_id ?: null,
-                        'author_id' => $_SESSION['admin_user_id'],
-                        'status' => $status,
-                        'is_featured' => $is_featured,
-                        'meta_title' => $meta_title,
-                        'meta_description' => $meta_description,
-                        'meta_keywords' => $meta_keywords,
-                        'featured_image' => $featured_image,
-                        'published_at' => $status === 'published' ? date('Y-m-d H:i:s') : null
-                    ];
-                    
-                    $post_id = $db->insert('blog_posts', $post_data);
-                    
-                    // Handle tags
-                    if ($post_id && isset($_POST['tags']) && is_array($_POST['tags'])) {
-                        foreach ($_POST['tags'] as $tag_id) {
-                            $db->query("INSERT INTO blog_post_tags (post_id, tag_id) VALUES (?, ?)", [$post_id, $tag_id]);
-                        }
-                    }
-                    
-                    $message = 'Post created successfully!';
-                } else {
-                    $post_id = intval($_POST['post_id']);
-                    
-                    $post_data = [
-                        'title' => $title,
-                        'slug' => $slug,
-                        'excerpt' => $excerpt,
-                        'content' => $content,
-                        'category_id' => $category_id ?: null,
-                        'status' => $status,
-                        'is_featured' => $is_featured,
-                        'meta_title' => $meta_title,
-                        'meta_description' => $meta_description,
-                        'meta_keywords' => $meta_keywords,
-                        'featured_image' => $featured_image,
-                        'updated_at' => date('Y-m-d H:i:s')
-                    ];
-                    
-                    // Set published_at if status changed to published
-                    if ($status === 'published') {
-                        $current_post = $db->fetchOne("SELECT published_at FROM blog_posts WHERE id = ?", [$post_id]);
-                        if (!$current_post['published_at']) {
-                            $post_data['published_at'] = date('Y-m-d H:i:s');
-                        }
-                    }
-                    
-                    $db->update('blog_posts', $post_data, 'id = ?', [$post_id]);
-                    
-                    // Update tags
-                    $db->query("DELETE FROM blog_post_tags WHERE post_id = ?", [$post_id]);
-                    if (isset($_POST['tags']) && is_array($_POST['tags'])) {
-                        foreach ($_POST['tags'] as $tag_id) {
-                            $db->query("INSERT INTO blog_post_tags (post_id, tag_id) VALUES (?, ?)", [$post_id, $tag_id]);
-                        }
-                    }
-                    
-                    $message = 'Post updated successfully!';
-                }
-            } catch (Exception $e) {
-                $error = 'Error: ' . $e->getMessage();
+        if ($action === 'create' || $action === 'update') {
+            $title = trim($_POST['title'] ?? '');
+            $slug = trim($_POST['slug'] ?? '');
+            $excerpt = trim($_POST['excerpt'] ?? '');
+            $content = $_POST['content'] ?? '';
+            $category_id = intval($_POST['category_id'] ?? 0);
+            $status = $_POST['status'] ?? 'draft';
+            $is_featured = isset($_POST['is_featured']) ? 1 : 0;
+            $meta_title = trim($_POST['meta_title'] ?? '');
+            $meta_description = trim($_POST['meta_description'] ?? '');
+            $meta_keywords = trim($_POST['meta_keywords'] ?? '');
+            $featured_image = trim($_POST['featured_image'] ?? '');
+            
+            // Generate slug if empty
+            if (empty($slug)) {
+                $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
             }
-        }
-    } elseif ($action === 'delete') {
-        $post_id = intval($_POST['post_id'] ?? 0);
-        if ($post_id) {
-            try {
-                $db->query("DELETE FROM blog_post_tags WHERE post_id = ?", [$post_id]);
-                $db->query("DELETE FROM blog_posts WHERE id = ?", [$post_id]);
-                $message = 'Post deleted successfully!';
-            } catch (Exception $e) {
-                $error = 'Error deleting post: ' . $e->getMessage();
+            
+            // Validate required fields
+            if (empty($title) || empty($content)) {
+                $error = 'Title and content are required';
+            } else {
+                try {
+                    if ($action === 'create') {
+                        $post_data = [
+                            'title' => $title,
+                            'slug' => $slug,
+                            'excerpt' => $excerpt,
+                            'content' => $content,
+                            'category_id' => $category_id ?: null,
+                            'author_id' => $_SESSION['admin_user_id'],
+                            'status' => $status,
+                            'is_featured' => $is_featured,
+                            'meta_title' => $meta_title,
+                            'meta_description' => $meta_description,
+                            'meta_keywords' => $meta_keywords,
+                            'featured_image' => $featured_image,
+                            'published_at' => $status === 'published' ? date('Y-m-d H:i:s') : null
+                        ];
+                        
+                        $post_id = $db->insert('blog_posts', $post_data);
+                        
+                        // Handle tags
+                        if ($post_id && isset($_POST['tags']) && is_array($_POST['tags'])) {
+                            foreach ($_POST['tags'] as $tag_id) {
+                                $db->query("INSERT INTO blog_post_tags (post_id, tag_id) VALUES (?, ?)", [$post_id, $tag_id]);
+                            }
+                        }
+                        
+                        $message = 'Post created successfully!';
+                    } else {
+                        $post_id = intval($_POST['post_id']);
+                        
+                        $post_data = [
+                            'title' => $title,
+                            'slug' => $slug,
+                            'excerpt' => $excerpt,
+                            'content' => $content,
+                            'category_id' => $category_id ?: null,
+                            'status' => $status,
+                            'is_featured' => $is_featured,
+                            'meta_title' => $meta_title,
+                            'meta_description' => $meta_description,
+                            'meta_keywords' => $meta_keywords,
+                            'featured_image' => $featured_image,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ];
+                        
+                        // Set published_at if status changed to published
+                        if ($status === 'published') {
+                            $current_post = $db->fetchOne("SELECT published_at FROM blog_posts WHERE id = ?", [$post_id]);
+                            if (!$current_post['published_at']) {
+                                $post_data['published_at'] = date('Y-m-d H:i:s');
+                            }
+                        }
+                        
+                        $db->update('blog_posts', $post_data, 'id = ?', [$post_id]);
+                        
+                        // Update tags
+                        $db->query("DELETE FROM blog_post_tags WHERE post_id = ?", [$post_id]);
+                        if (isset($_POST['tags']) && is_array($_POST['tags'])) {
+                            foreach ($_POST['tags'] as $tag_id) {
+                                $db->query("INSERT INTO blog_post_tags (post_id, tag_id) VALUES (?, ?)", [$post_id, $tag_id]);
+                            }
+                        }
+                        
+                        $message = 'Post updated successfully!';
+                    }
+                } catch (Exception $e) {
+                    $error = 'Error: ' . $e->getMessage();
+                }
+            }
+        } elseif ($action === 'delete') {
+            $post_id = intval($_POST['post_id'] ?? 0);
+            if ($post_id) {
+                try {
+                    $db->query("DELETE FROM blog_post_tags WHERE post_id = ?", [$post_id]);
+                    $db->query("DELETE FROM blog_posts WHERE id = ?", [$post_id]);
+                    $message = 'Post deleted successfully!';
+                } catch (Exception $e) {
+                    $error = 'Error deleting post: ' . $e->getMessage();
+                }
             }
         }
     }
-}
 
-// Get posts for listing
-$posts = $db->fetchAll("
-    SELECT 
-        bp.*,
-        bc.name as category_name,
-        array_agg(DISTINCT bt.name) as tags
-    FROM blog_posts bp
-    LEFT JOIN blog_categories bc ON bp.category_id = bc.id
-    LEFT JOIN blog_post_tags bpt ON bp.id = bpt.post_id
-    LEFT JOIN blog_tags bt ON bpt.tag_id = bt.id
-    GROUP BY bp.id, bc.name
-    ORDER BY bp.created_at DESC
-");
-
-// Get categories for form
-$categories = $db->fetchAll("SELECT id, name FROM blog_categories WHERE is_active = true ORDER BY name");
-
-// Get tags for form
-$tags = $db->fetchAll("SELECT id, name FROM blog_tags WHERE is_active = true ORDER BY name");
-
-// Get post for editing
-$edit_post = null;
-if (isset($_GET['edit']) && intval($_GET['edit'])) {
-    $edit_post = $db->fetchOne("
+    // Get posts for listing
+    $posts = $db->fetchAll("
         SELECT 
             bp.*,
-            array_agg(DISTINCT bpt.tag_id) as tag_ids
+            bc.name as category_name,
+            array_agg(DISTINCT bt.name) as tags
         FROM blog_posts bp
+        LEFT JOIN blog_categories bc ON bp.category_id = bc.id
         LEFT JOIN blog_post_tags bpt ON bp.id = bpt.post_id
-        WHERE bp.id = ?
-        GROUP BY bp.id
-    ", [intval($_GET['edit'])]);
-    
-    if ($edit_post) {
-        $edit_post['tag_ids'] = $edit_post['tag_ids'] ? explode(',', $edit_post['tag_ids']) : [];
+        LEFT JOIN blog_tags bt ON bpt.tag_id = bt.id
+        GROUP BY bp.id, bc.name
+        ORDER BY bp.created_at DESC
+    ");
+
+    // Get categories for form
+    $categories = $db->fetchAll("SELECT id, name FROM blog_categories WHERE is_active = true ORDER BY name");
+
+    // Get tags for form
+    $tags = $db->fetchAll("SELECT id, name FROM blog_tags WHERE is_active = true ORDER BY name");
+
+    // Get post for editing
+    if (isset($_GET['edit']) && intval($_GET['edit'])) {
+        $edit_post = $db->fetchOne("
+            SELECT 
+                bp.*,
+                array_agg(DISTINCT bpt.tag_id) as tag_ids
+            FROM blog_posts bp
+            LEFT JOIN blog_post_tags bpt ON bp.id = bpt.post_id
+            WHERE bp.id = ?
+            GROUP BY bp.id
+        ", [intval($_GET['edit'])]);
+        
+        if ($edit_post) {
+            $edit_post['tag_ids'] = $edit_post['tag_ids'] ? explode(',', $edit_post['tag_ids']) : [];
+        }
     }
+    
+} catch (Exception $e) {
+    // Database connection failed
+    $error = 'Database connection failed. Please check your database configuration.';
+    $db_available = false;
 }
 ?>
 
@@ -175,6 +189,7 @@ if (isset($_GET['edit']) && intval($_GET['edit'])) {
     <title>Blog Posts Management - BitSync Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <?php if ($db_available): ?>
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
@@ -190,6 +205,7 @@ if (isset($_GET['edit']) && intval($_GET['edit'])) {
             height: 400
         });
     </script>
+    <?php endif; ?>
 </head>
 <body class="bg-gray-50 dark:bg-slate-900">
     <div class="min-h-screen">
@@ -224,6 +240,38 @@ if (isset($_GET['edit']) && intval($_GET['edit'])) {
             </div>
             <?php endif; ?>
 
+            <?php if (!$db_available): ?>
+            <!-- Database Connection Error -->
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-8 mb-8">
+                <div class="flex items-center justify-center mb-4">
+                    <svg class="w-12 h-12 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-yellow-800 dark:text-yellow-200 mb-4 text-center">Database Connection Required</h2>
+                <p class="text-yellow-700 dark:text-yellow-300 mb-6 text-center">
+                    The blog management system requires a database connection. Please configure your database settings first.
+                </p>
+                <div class="bg-white dark:bg-slate-800 rounded-lg p-4 text-left">
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Setup Steps:</h3>
+                    <ol class="list-decimal list-inside space-y-1 text-sm text-gray-600 dark:text-gray-300">
+                        <li>Configure your database credentials in the <code class="bg-gray-100 dark:bg-slate-700 px-1 rounded">.env</code> file</li>
+                        <li>Run the migration: <code class="bg-gray-100 dark:bg-slate-700 px-1 rounded">php database/migrate-blog.php</code></li>
+                        <li>Refresh this page to access blog management</li>
+                    </ol>
+                </div>
+                <div class="flex justify-center space-x-4 mt-6">
+                    <a href="test-db.php" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-database mr-2"></i>
+                        Test Database
+                    </a>
+                    <a href="create-admin.php" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Create Admin User
+                    </a>
+                </div>
+            </div>
+            <?php else: ?>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Form Section -->
                 <div class="lg:col-span-1">
@@ -366,6 +414,13 @@ if (isset($_GET['edit']) && intval($_GET['edit'])) {
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+                                    <?php if (empty($posts)): ?>
+                                    <tr>
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                            No blog posts found. Create your first post using the form on the left.
+                                        </td>
+                                    </tr>
+                                    <?php else: ?>
                                     <?php foreach ($posts as $post): ?>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -421,12 +476,14 @@ if (isset($_GET['edit']) && intval($_GET['edit'])) {
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </body>

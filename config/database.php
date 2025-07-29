@@ -10,7 +10,7 @@ return [
         'port' => $_ENV['DB_PORT'] ?? '26257',
         'database' => $_ENV['DB_NAME'] ?? 'ken',
         'username' => $_ENV['DB_USER'] ?? 'demilade',
-        'password' => $_ENV['DB_PASSWORD'] ?? '',
+        'password' => $_ENV['DB_PASSWORD'] ?? 'd66tiYy5ssCYTlX_r70lZA',
         'charset' => 'utf8mb4',
         'options' => [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
