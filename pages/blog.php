@@ -98,7 +98,7 @@ try {
                 bp.is_featured,
                 bc.name as category_name,
                 bc.slug as category_slug,
-                array_agg(DISTINCT bt.name) as tags
+                COALESCE(array_agg(DISTINCT bt.name) FILTER (WHERE bt.name IS NOT NULL), ARRAY[]::text[]) as tags
             FROM blog_posts bp
             LEFT JOIN blog_categories bc ON bp.category_id = bc.id
             LEFT JOIN blog_post_tags bpt ON bp.id = bpt.post_id
@@ -113,6 +113,19 @@ try {
         $params[] = $offset;
 
         $posts = $db->fetchAll($posts_sql, $params);
+
+        // Process tags for each post
+        foreach ($posts as &$post) {
+            // Ensure tags is always an array
+            if (is_string($post['tags'])) {
+                // Remove curly braces and split by comma
+                $tags_string = trim($post['tags'], '{}');
+                $post['tags'] = $tags_string ? explode(',', $tags_string) : [];
+            } elseif (!is_array($post['tags'])) {
+                $post['tags'] = [];
+            }
+        }
+        unset($post); // Break the reference
 
         // Get categories for filter
         $categories = $db->fetchAll("
@@ -443,7 +456,7 @@ try {
                             </p>
                             
                             <!-- Tags -->
-                            <?php if (!empty($post['tags']) && $post['tags'][0] !== null): ?>
+                            <?php if (!empty($post['tags']) && is_array($post['tags'])): ?>
                             <div class="flex flex-wrap gap-1 mb-4">
                                 <?php foreach ($post['tags'] as $post_tag): ?>
                                 <span class="px-2 py-1 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs rounded">

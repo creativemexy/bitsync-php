@@ -43,7 +43,7 @@ try {
                 bp.*,
                 bc.name as category_name,
                 bc.slug as category_slug,
-                array_agg(DISTINCT bt.name) as tags
+                COALESCE(array_agg(DISTINCT bt.name) FILTER (WHERE bt.name IS NOT NULL), ARRAY[]::text[]) as tags
             FROM blog_posts bp
             LEFT JOIN blog_categories bc ON bp.category_id = bc.id
             LEFT JOIN blog_post_tags bpt ON bp.id = bpt.post_id
@@ -56,6 +56,15 @@ try {
             // Post not found, redirect to blog
             header('Location: /blog');
             exit;
+        }
+
+        // Process tags for the post
+        if (is_string($post['tags'])) {
+            // Remove curly braces and split by comma
+            $tags_string = trim($post['tags'], '{}');
+            $post['tags'] = $tags_string ? explode(',', $tags_string) : [];
+        } elseif (!is_array($post['tags'])) {
+            $post['tags'] = [];
         }
 
         // Increment view count
@@ -256,7 +265,7 @@ if ($post) {
                 </div>
 
                 <!-- Tags -->
-                <?php if (!empty($post['tags']) && $post['tags'][0] !== null): ?>
+                <?php if (!empty($post['tags']) && is_array($post['tags'])): ?>
                 <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6">
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Tags</h3>
                     <div class="flex flex-wrap gap-2">
