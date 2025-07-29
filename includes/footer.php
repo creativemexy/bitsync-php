@@ -46,12 +46,12 @@
             <div>
                 <h4 class="text-lg font-black mb-6 text-white">Services</h4>
                 <ul class="space-y-3">
-                    <li><a href="?page=web-development" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Web Development</a></li>
-                    <li><a href="?page=mobile-development" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Mobile Development</a></li>
-                    <li><a href="?page=cloud-solutions" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Cloud Solutions</a></li>
-                    <li><a href="?page=blockchain-technology" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Blockchain Technology</a></li>
-                    <li><a href="?page=ai-machine-learning" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">AI & Machine Learning</a></li>
-                    <li><a href="?page=digital-transformation" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Digital Transformation</a></li>
+                    <li><a href="/web-development" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Web Development</a></li>
+                    <li><a href="/mobile-development" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Mobile Development</a></li>
+                    <li><a href="/cloud-solutions" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Cloud Solutions</a></li>
+                    <li><a href="/blockchain-technology" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Blockchain Technology</a></li>
+                    <li><a href="/ai-machine-learning" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">AI & Machine Learning</a></li>
+                    <li><a href="/digital-transformation" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Digital Transformation</a></li>
                 </ul>
             </div>
 
@@ -59,12 +59,12 @@
             <div>
                 <h4 class="text-lg font-black mb-6 text-white">Company</h4>
                 <ul class="space-y-3">
-                    <li><a href="?page=about" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">About Us</a></li>
-                    <li><a href="?page=solutions" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Solutions</a></li>
-                    <li><a href="?page=contact" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Contact</a></li>
-                    <li><a href="?page=careers" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Careers</a></li>
-                    <li><a href="?page=blog" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Blog</a></li>
-                    <li><a href="?page=case-studies" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Case Studies</a></li>
+                    <li><a href="/about" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">About Us</a></li>
+                    <li><a href="/solutions" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Solutions</a></li>
+                    <li><a href="/contact" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Contact</a></li>
+                    <li><a href="/careers" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Careers</a></li>
+                    <li><a href="/blog" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Blog</a></li>
+                    <li><a href="/case-studies" class="text-slate-300 hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block">Case Studies</a></li>
                 </ul>
             </div>
 

@@ -82,15 +82,12 @@ $recentContacts = $db->fetchAll("SELECT name, email, subject, created_at FROM co
                     <div class="flex-shrink-0">
                         <h1 class="text-xl font-bold text-gray-900">BitSync Admin</h1>
                     </div>
-                    <div class="hidden md:block ml-10">
-                        <div class="flex items-baseline space-x-4">
-                            <a href="index.php" class="bg-primary text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                            <a href="pages.php" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Pages</a>
-                            <a href="services.php" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Services</a>
-                            <a href="subscribers.php" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Subscribers</a>
-                            <a href="contacts.php" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Contacts</a>
-                            <a href="settings.php" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Settings</a>
-                        </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="index.php" class="bg-blue-100 text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                        <a href="pages.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Content</a>
+                        <a href="subscribers.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Subscribers</a>
+                        <a href="contacts.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Contacts</a>
+                        <a href="monitoring.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Monitoring</a>
                     </div>
                 </div>
                 <div class="flex items-center">

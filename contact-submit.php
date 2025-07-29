@@ -30,6 +30,11 @@ function loadEnv($file) {
 loadEnv(__DIR__ . '/.env');
 
 require_once 'includes/Database.php';
+require_once 'includes/Monitoring.php';
+
+// Initialize monitoring
+$monitoring = new Monitoring();
+$monitoring->startRequest();
 
 // Handle POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -68,8 +73,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (!empty($errors)) {
+        // Track failed submission
+        $monitoring->trackFormSubmission('contact', false, [
+            'errors' => $errors,
+            'email' => $email
+        ]);
+        
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
+        $monitoring->endRequest();
         exit;
     }
     
@@ -90,6 +102,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'submitted_at' => date('Y-m-d H:i:s')
         ]);
         
+        // Track successful submission
+        $monitoring->trackFormSubmission('contact', true, [
+            'submission_id' => $submissionId,
+            'email' => $email,
+            'subject' => $subject
+        ]);
+        
+        // Track performance
+        $monitoring->trackPerformance('contact_form_processing', microtime(true) * 1000);
+        
         // Log successful submission
         error_log("Contact form submission received from $email: $subject");
         
@@ -100,6 +122,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
         
     } catch (Exception $e) {
+        // Track error
+        $monitoring->logError($e, [
+            'form_type' => 'contact',
+            'email' => $email
+        ]);
+        
         error_log("Contact form submission error: " . $e->getMessage());
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => 'Message could not be sent. Please try again later.']);
@@ -108,4 +136,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-} 
+}
+
+$monitoring->endRequest(); 

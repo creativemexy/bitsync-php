@@ -30,6 +30,11 @@ function loadEnv($file) {
 loadEnv(__DIR__ . '/.env');
 
 require_once 'includes/Database.php';
+require_once 'includes/Monitoring.php';
+
+// Initialize monitoring
+$monitoring = new Monitoring();
+$monitoring->startRequest();
 
 // Handle POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,14 +51,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Validate email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        // Track failed validation
+        $monitoring->trackFormSubmission('newsletter', false, [
+            'error' => 'Invalid email',
+            'email' => $email
+        ]);
+        
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Please enter a valid email address']);
+        $monitoring->endRequest();
         exit;
     }
     
     if (empty($email)) {
+        // Track failed validation
+        $monitoring->trackFormSubmission('newsletter', false, [
+            'error' => 'Email required',
+            'email' => $email
+        ]);
+        
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Email is required']);
+        $monitoring->endRequest();
         exit;
     }
     
@@ -68,6 +87,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($existing) {
             if ($existing['is_active']) {
+                // Track duplicate subscription attempt
+                $monitoring->trackFormSubmission('newsletter', false, [
+                    'error' => 'Already subscribed',
+                    'email' => $email
+                ]);
+                
                 echo json_encode(['success' => false, 'message' => 'You are already subscribed to our newsletter']);
             } else {
                 // Reactivate subscription
@@ -75,11 +100,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "UPDATE newsletter_subscribers SET is_active = true, unsubscribed_at = NULL, updated_at = CURRENT_TIMESTAMP WHERE email = ?",
                     [$email]
                 );
+                
+                // Track reactivation
+                $monitoring->trackFormSubmission('newsletter', true, [
+                    'action' => 'reactivation',
+                    'email' => $email
+                ]);
+                
                 echo json_encode(['success' => true, 'message' => 'Welcome back! Your subscription has been reactivated']);
             }
         } else {
             // Add new subscriber
-            $db->insert('newsletter_subscribers', [
+            $subscriberId = $db->insert('newsletter_subscribers', [
                 'email' => $email,
                 'first_name' => $firstName,
                 'last_name' => $lastName,
@@ -88,10 +120,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'subscribed_at' => date('Y-m-d H:i:s')
             ]);
             
+            // Track successful subscription
+            $monitoring->trackFormSubmission('newsletter', true, [
+                'action' => 'new_subscription',
+                'subscriber_id' => $subscriberId,
+                'email' => $email
+            ]);
+            
             echo json_encode(['success' => true, 'message' => 'Thank you for subscribing to our newsletter!']);
         }
         
+        // Track performance
+        $monitoring->trackPerformance('newsletter_processing', microtime(true) * 1000);
+        
     } catch (Exception $e) {
+        // Track error
+        $monitoring->logError($e, [
+            'form_type' => 'newsletter',
+            'email' => $email
+        ]);
+        
         error_log("Newsletter subscription error: " . $e->getMessage());
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => 'Subscription failed. Please try again later.']);
@@ -100,4 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-} 
+}
+
+$monitoring->endRequest(); 

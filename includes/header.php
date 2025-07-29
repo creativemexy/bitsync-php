@@ -34,6 +34,13 @@
                     Contact
                     <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></div>
                 </a>
+                <a href="/search" class="relative px-4 py-2 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-semibold transition-all duration-300 group flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Search
+                    <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></div>
+                </a>
             </nav>
 
             <!-- CTA Button and Dark Mode Toggle -->
@@ -74,6 +81,12 @@
                 <a href="/services" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 block px-3 py-3 text-base font-semibold transition-colors rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">Services</a>
                 <a href="/solutions" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 block px-3 py-3 text-base font-semibold transition-colors rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">Solutions</a>
                 <a href="/contact" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 block px-3 py-3 text-base font-semibold transition-colors rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">Contact</a>
+                <a href="/search" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 block px-3 py-3 text-base font-semibold transition-colors rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Search
+                </a>
                 <div class="pt-2">
                     <a href="/contact" class="block w-full text-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300">
                         Get Started
