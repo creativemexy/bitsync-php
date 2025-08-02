@@ -307,6 +307,10 @@ $unreadCount = $notification->getUnreadCount($_SESSION['user_id']);
                                 <i class="fas fa-calendar-plus text-2xl text-gray-400 mb-2"></i>
                                 <span class="text-sm font-medium text-gray-700">Schedule Meeting</span>
                             </button>
+                            <a href="email.php" class="flex flex-col items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-workspace-500 hover:bg-workspace-50 transition-colors">
+                                <i class="fas fa-envelope text-2xl text-gray-400 mb-2"></i>
+                                <span class="text-sm font-medium text-gray-700">Email</span>
+                            </a>
                         </div>
                     </div>
                 </div>
