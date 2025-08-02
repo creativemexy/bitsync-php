@@ -242,7 +242,7 @@ class User {
         try {
             return $this->db->fetchAll(
                 "SELECT u.id, u.username, u.email, u.first_name, u.last_name, u.is_active, u.is_admin, u.last_login, u.created_at,
-                        COALESCE(array_agg(DISTINCT r.name) FILTER (WHERE r.name IS NOT NULL), ARRAY[]::text[]) as roles
+                        COALESCE(array_agg(DISTINCT r.name) FILTER (WHERE r.name IS NOT NULL), ARRAY[]::text[]) as user_roles
                  FROM users u
                  LEFT JOIN user_roles ur ON u.id = ur.user_id
                  LEFT JOIN roles r ON ur.role_id = r.id

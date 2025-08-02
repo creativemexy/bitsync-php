@@ -124,10 +124,10 @@ $roles = $userManager->getAllRoles();
 
 // Process user roles for display
 foreach ($users as &$user) {
-    if (is_string($user['roles'])) {
-        $roles_string = trim($user['roles'], '{}');
+    if (is_string($user['user_roles'])) {
+        $roles_string = trim($user['user_roles'], '{}');
         $user['roles'] = $roles_string ? explode(',', $roles_string) : [];
-    } elseif (!is_array($user['roles'])) {
+    } elseif (!is_array($user['user_roles'])) {
         $user['roles'] = [];
     }
 }
