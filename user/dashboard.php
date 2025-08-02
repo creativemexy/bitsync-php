@@ -355,7 +355,7 @@ $unreadCount = $notification->getUnreadCount($_SESSION['user_id']);
         
         // Load notifications
         function loadNotifications() {
-            fetch('notification-api.php?action=list&limit=10')
+            fetch('../notification-api.php?action=list&limit=10')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -437,7 +437,7 @@ $unreadCount = $notification->getUnreadCount($_SESSION['user_id']);
         
         // Mark notification as read
         function markAsRead(notificationId) {
-            fetch('notification-api.php?action=mark-read', {
+            fetch('../notification-api.php?action=mark-read', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `notification_id=${notificationId}`
@@ -454,7 +454,7 @@ $unreadCount = $notification->getUnreadCount($_SESSION['user_id']);
         // Delete notification
         function deleteNotification(notificationId) {
             if (confirm('Are you sure you want to delete this notification?')) {
-                fetch('notification-api.php?action=delete', {
+                fetch('../notification-api.php?action=delete', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `notification_id=${notificationId}`
@@ -472,7 +472,7 @@ $unreadCount = $notification->getUnreadCount($_SESSION['user_id']);
         // Mark all as read
         if (markAllReadBtn) {
             markAllReadBtn.addEventListener('click', function() {
-                fetch('notification-api.php?action=mark-all-read', {
+                fetch('../notification-api.php?action=mark-all-read', {
                     method: 'POST'
                 })
                 .then(response => response.json())
@@ -487,7 +487,7 @@ $unreadCount = $notification->getUnreadCount($_SESSION['user_id']);
         
         // Update notification count
         function updateNotificationCount() {
-            fetch('notification-api.php?action=count')
+            fetch('../notification-api.php?action=count')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
