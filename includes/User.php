@@ -156,6 +156,10 @@ class User {
      */
     public function createUser($userData) {
         try {
+            // Extract roles before processing user data
+            $roles = $userData['roles'] ?? [];
+            unset($userData['roles']);
+            
             // Hash password
             $userData['password_hash'] = password_hash($userData['password'], PASSWORD_DEFAULT);
             unset($userData['password']);
@@ -164,8 +168,8 @@ class User {
             $userId = $this->db->insert('users', $userData);
             
             // Assign roles if provided
-            if (!empty($userData['roles'])) {
-                foreach ($userData['roles'] as $roleId) {
+            if (!empty($roles)) {
+                foreach ($roles as $roleId) {
                     $this->db->insert('user_roles', [
                         'user_id' => $userId,
                         'role_id' => $roleId,
@@ -186,6 +190,10 @@ class User {
      */
     public function updateUser($userId, $userData) {
         try {
+            // Extract roles before processing user data
+            $roles = $userData['roles'] ?? null;
+            unset($userData['roles']);
+            
             // Hash password if provided
             if (!empty($userData['password'])) {
                 $userData['password_hash'] = password_hash($userData['password'], PASSWORD_DEFAULT);
@@ -193,15 +201,15 @@ class User {
             }
             
             // Update user
-            $this->db->update('users', $userData, 'id = ?', [$userId]);
+            $this->db->update('users', $userData, 'id = :user_id', ['user_id' => $userId]);
             
             // Update roles if provided
-            if (isset($userData['roles'])) {
+            if (isset($roles)) {
                 // Remove existing roles
                 $this->db->delete('user_roles', 'user_id = :user_id', ['user_id' => $userId]);
                 
                 // Assign new roles
-                foreach ($userData['roles'] as $roleId) {
+                foreach ($roles as $roleId) {
                     $this->db->insert('user_roles', [
                         'user_id' => $userId,
                         'role_id' => $roleId,
