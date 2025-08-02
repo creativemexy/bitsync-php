@@ -164,6 +164,14 @@ class User {
             $userData['password_hash'] = password_hash($userData['password'], PASSWORD_DEFAULT);
             unset($userData['password']);
             
+            // Ensure boolean fields are integers for PostgreSQL
+            if (isset($userData['is_active'])) {
+                $userData['is_active'] = $userData['is_active'] ? 1 : 0;
+            }
+            if (isset($userData['is_admin'])) {
+                $userData['is_admin'] = $userData['is_admin'] ? 1 : 0;
+            }
+            
             // Insert user
             $userId = $this->db->insert('users', $userData);
             
@@ -198,6 +206,14 @@ class User {
             if (!empty($userData['password'])) {
                 $userData['password_hash'] = password_hash($userData['password'], PASSWORD_DEFAULT);
                 unset($userData['password']);
+            }
+            
+            // Ensure boolean fields are integers for PostgreSQL
+            if (isset($userData['is_active'])) {
+                $userData['is_active'] = $userData['is_active'] ? 1 : 0;
+            }
+            if (isset($userData['is_admin'])) {
+                $userData['is_admin'] = $userData['is_admin'] ? 1 : 0;
             }
             
             // Update user

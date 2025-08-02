@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'password' => $_POST['password'],
                     'first_name' => trim($_POST['first_name']),
                     'last_name' => trim($_POST['last_name']),
-                    'is_active' => isset($_POST['is_active']),
-                    'is_admin' => isset($_POST['is_admin']),
+                    'is_active' => isset($_POST['is_active']) ? 1 : 0,
+                    'is_admin' => isset($_POST['is_admin']) ? 1 : 0,
                     'roles' => $_POST['roles'] ?? []
                 ];
                 
@@ -73,8 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'email' => trim($_POST['email']),
                     'first_name' => trim($_POST['first_name']),
                     'last_name' => trim($_POST['last_name']),
-                    'is_active' => isset($_POST['is_active']),
-                    'is_admin' => isset($_POST['is_admin']),
+                    'is_active' => isset($_POST['is_active']) ? 1 : 0,
+                    'is_admin' => isset($_POST['is_admin']) ? 1 : 0,
                     'roles' => $_POST['roles'] ?? []
                 ];
                 
@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
             case 'toggle_user_status':
                 $userId = $_POST['user_id'];
-                $isActive = $_POST['is_active'] === 'true';
+                $isActive = $_POST['is_active'] === 'true' ? 1 : 0;
                 $userManager->updateUser($userId, ['is_active' => $isActive]);
                 $message = 'User status updated successfully';
                 break;
