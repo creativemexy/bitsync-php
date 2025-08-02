@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="text-sm">
-                        <a href="#" class="font-medium text-workspace-600 hover:text-workspace-500">
+                        <a href="forgot-password.php" class="font-medium text-workspace-600 hover:text-workspace-500">
                             Forgot your password?
                         </a>
                     </div>

@@ -217,6 +217,10 @@ try {
                         ⚠️ Database connection failed. Using fallback authentication.
                     <?php endif; ?>
                 </p>
+                <a href="forgot-password.php" class="text-blue-600 hover:text-blue-500 text-sm block">
+                    <i class="fas fa-lock mr-1"></i>
+                    Forgot your password?
+                </a>
             </div>
         </form>
         
