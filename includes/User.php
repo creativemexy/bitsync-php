@@ -24,17 +24,17 @@ class User {
         try {
             $user = $this->db->fetchOne(
                 "SELECT id, username, email, password_hash, first_name, last_name, is_active, is_admin, last_login 
-                 FROM users WHERE username = ? AND is_active = true",
-                [$username]
+                 FROM users WHERE username = :username AND is_active = true",
+                ['username' => $username]
             );
             
             if ($user && password_verify($password, $user['password_hash'])) {
                 // Update last login
-                $this->db->update('users', 
-                    ['last_login' => date('Y-m-d H:i:s')], 
-                    'id = ?', 
-                    [$user['id']]
-                );
+                            $this->db->update('users', 
+                ['last_login' => date('Y-m-d H:i:s')], 
+                'id = :user_id', 
+                ['user_id' => $user['id']]
+            );
                 
                 $this->userData = $user;
                 $this->loadUserRoles();
@@ -55,8 +55,8 @@ class User {
         try {
             $user = $this->db->fetchOne(
                 "SELECT id, username, email, password_hash, first_name, last_name, is_active, is_admin, last_login 
-                 FROM users WHERE id = ?",
-                [$userId]
+                 FROM users WHERE id = :user_id",
+                ['user_id' => $userId]
             );
             
             if ($user) {
@@ -83,8 +83,8 @@ class User {
                 "SELECT r.id, r.name, r.description, r.permissions 
                  FROM roles r 
                  INNER JOIN user_roles ur ON r.id = ur.role_id 
-                 WHERE ur.user_id = ? AND r.is_active = true",
-                [$this->userData['id']]
+                 WHERE ur.user_id = :user_id AND r.is_active = true",
+                ['user_id' => $this->userData['id']]
             );
             
             $this->roles = $roles;
@@ -198,7 +198,7 @@ class User {
             // Update roles if provided
             if (isset($userData['roles'])) {
                 // Remove existing roles
-                $this->db->delete('user_roles', 'user_id = ?', [$userId]);
+                $this->db->delete('user_roles', 'user_id = :user_id', ['user_id' => $userId]);
                 
                 // Assign new roles
                 foreach ($userData['roles'] as $roleId) {
@@ -227,7 +227,7 @@ class User {
                 throw new Exception("Cannot delete your own account");
             }
             
-            $this->db->delete('users', 'id = ?', [$userId]);
+            $this->db->delete('users', 'id = :user_id', ['user_id' => $userId]);
             return true;
         } catch (Exception $e) {
             error_log("Delete user error: " . $e->getMessage());
@@ -276,12 +276,12 @@ class User {
      */
     public function usernameExists($username, $excludeUserId = null) {
         try {
-            $sql = "SELECT id FROM users WHERE username = ?";
-            $params = [$username];
+            $sql = "SELECT id FROM users WHERE username = :username";
+            $params = ['username' => $username];
             
             if ($excludeUserId) {
-                $sql .= " AND id != ?";
-                $params[] = $excludeUserId;
+                $sql .= " AND id != :exclude_user_id";
+                $params['exclude_user_id'] = $excludeUserId;
             }
             
             $user = $this->db->fetchOne($sql, $params);
@@ -297,12 +297,12 @@ class User {
      */
     public function emailExists($email, $excludeUserId = null) {
         try {
-            $sql = "SELECT id FROM users WHERE email = ?";
-            $params = [$email];
+            $sql = "SELECT id FROM users WHERE email = :email";
+            $params = ['email' => $email];
             
             if ($excludeUserId) {
-                $sql .= " AND id != ?";
-                $params[] = $excludeUserId;
+                $sql .= " AND id != :exclude_user_id";
+                $params['exclude_user_id'] = $excludeUserId;
             }
             
             $user = $this->db->fetchOne($sql, $params);

@@ -82,23 +82,164 @@ $recentContacts = $db->fetchAll("SELECT name, email, subject, created_at FROM co
                     <div class="flex-shrink-0">
                         <h1 class="text-xl font-bold text-gray-900">BitSync Admin</h1>
                     </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="index.php" class="bg-blue-100 text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                        <a href="pages.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Content</a>
-                        <a href="subscribers.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Subscribers</a>
-                        <a href="contacts.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Contacts</a>
-                        <a href="monitoring.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Monitoring</a>
-                        <a href="../analytics-dashboard" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Analytics</a>
-                        <a href="chat-management.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Chat Management</a>
-                        <a href="blog-posts.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Blog Posts</a>
-                        <a href="blog-categories.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Categories</a>
-                        <a href="users.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Users</a>
-                        <a href="roles.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Roles</a>
+                    
+                    <!-- Desktop Navigation -->
+                    <div class="hidden lg:ml-6 lg:flex lg:space-x-1">
+                        <a href="index.php" class="bg-blue-100 text-blue-700 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                        </a>
+                        
+                        <!-- Content Management -->
+                        <div class="relative group">
+                            <button class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <i class="fas fa-file-alt mr-1"></i>Content
+                                <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <a href="pages.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-file mr-2"></i>Pages
+                                </a>
+                                <a href="blog-posts.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-blog mr-2"></i>Blog Posts
+                                </a>
+                                <a href="blog-categories.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-tags mr-2"></i>Categories
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- User Management -->
+                        <div class="relative group">
+                            <button class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <i class="fas fa-users mr-1"></i>Users
+                                <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <a href="users.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-user mr-2"></i>Manage Users
+                                </a>
+                                <a href="roles.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-user-tag mr-2"></i>Roles & Permissions
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Communication -->
+                        <div class="relative group">
+                            <button class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <i class="fas fa-comments mr-1"></i>Communication
+                                <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <a href="subscribers.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-envelope mr-2"></i>Newsletter Subscribers
+                                </a>
+                                <a href="contacts.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-address-book mr-2"></i>Contact Messages
+                                </a>
+                                <a href="chat-management.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-comment-dots mr-2"></i>Live Chat
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Analytics & Monitoring -->
+                        <div class="relative group">
+                            <button class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <i class="fas fa-chart-line mr-1"></i>Analytics
+                                <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <a href="../analytics-dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-chart-bar mr-2"></i>Dashboard
+                                </a>
+                                <a href="monitoring.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-server mr-2"></i>System Monitoring
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Mobile menu button -->
+                <div class="lg:hidden">
+                    <button id="mobile-menu-button" class="text-gray-500 hover:text-gray-700 p-2">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- User menu -->
                 <div class="flex items-center">
-                    <span class="text-gray-700 text-sm mr-4">Welcome, <?php echo htmlspecialchars($_SESSION['admin_username'] ?? 'Admin'); ?></span>
-                    <a href="logout.php" class="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700">Logout</a>
+                    <div class="relative group">
+                        <button class="flex items-center text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-user-circle mr-2 text-lg"></i>
+                            <span><?php echo htmlspecialchars($_SESSION['admin_username'] ?? 'Admin'); ?></span>
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="px-4 py-2 text-sm text-gray-500 border-b">
+                                <i class="fas fa-user mr-2"></i>Administrator
+                            </div>
+                            <a href="logout.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="lg:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 bg-gray-50">
+                <a href="index.php" class="bg-blue-100 text-blue-700 block px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                </a>
+                
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Content</h3>
+                    <a href="pages.php" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-file mr-2"></i>Pages
+                    </a>
+                    <a href="blog-posts.php" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-blog mr-2"></i>Blog Posts
+                    </a>
+                    <a href="blog-categories.php" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-tags mr-2"></i>Categories
+                    </a>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Users</h3>
+                    <a href="users.php" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-user mr-2"></i>Manage Users
+                    </a>
+                    <a href="roles.php" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-user-tag mr-2"></i>Roles & Permissions
+                    </a>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Communication</h3>
+                    <a href="subscribers.php" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-envelope mr-2"></i>Newsletter Subscribers
+                    </a>
+                    <a href="contacts.php" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-address-book mr-2"></i>Contact Messages
+                    </a>
+                    <a href="chat-management.php" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-comment-dots mr-2"></i>Live Chat
+                    </a>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Analytics</h3>
+                    <a href="../analytics-dashboard" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-chart-bar mr-2"></i>Dashboard
+                    </a>
+                    <a href="monitoring.php" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-server mr-2"></i>System Monitoring
+                    </a>
                 </div>
             </div>
         </div>
@@ -308,8 +449,17 @@ $recentContacts = $db->fetchAll("SELECT name, email, subject, created_at FROM co
     </div>
 
     <script>
-        // Add any JavaScript for interactivity here
+        // Mobile menu toggle
         document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            
             // Auto-refresh stats every 30 seconds
             setInterval(function() {
                 // You can add AJAX calls here to refresh stats
