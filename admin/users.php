@@ -268,13 +268,176 @@ unset($user);
         </main>
     </div>
 
+    <!-- Create User Modal -->
+    <div id="createModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Create New User</h3>
+                <form method="POST" class="space-y-4">
+                    <input type="hidden" name="action" value="create_user">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Username</label>
+                        <input type="text" name="username" required class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" name="email" required class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" name="password" required class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">First Name</label>
+                            <input type="text" name="first_name" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                            <input type="text" name="last_name" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Roles</label>
+                        <div class="mt-2 space-y-2">
+                            <?php foreach ($roles as $role): ?>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="roles[]" value="<?php echo $role['id']; ?>" class="rounded border-gray-300 text-blue-600">
+                                    <span class="ml-2 text-sm text-gray-700"><?php echo htmlspecialchars($role['name']); ?></span>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="is_active" checked class="rounded border-gray-300 text-blue-600">
+                            <span class="ml-2 text-sm text-gray-700">Active</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="is_admin" class="rounded border-gray-300 text-blue-600">
+                            <span class="ml-2 text-sm text-gray-700">Admin</span>
+                        </label>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeModal('createModal')" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Create User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Edit User</h3>
+                <form method="POST" class="space-y-4">
+                    <input type="hidden" name="action" value="update_user">
+                    <input type="hidden" name="user_id" id="edit_user_id">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Username</label>
+                        <input type="text" name="username" id="edit_username" required class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" name="email" id="edit_email" required class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password (leave blank to keep current)</label>
+                        <input type="password" name="password" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">First Name</label>
+                            <input type="text" name="first_name" id="edit_first_name" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                            <input type="text" name="last_name" id="edit_last_name" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Roles</label>
+                        <div class="mt-2 space-y-2" id="edit_roles">
+                            <?php foreach ($roles as $role): ?>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="roles[]" value="<?php echo $role['id']; ?>" class="edit-role-checkbox rounded border-gray-300 text-blue-600">
+                                    <span class="ml-2 text-sm text-gray-700"><?php echo htmlspecialchars($role['name']); ?></span>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="is_active" id="edit_is_active" class="rounded border-gray-300 text-blue-600">
+                            <span class="ml-2 text-sm text-gray-700">Active</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="is_admin" id="edit_is_admin" class="rounded border-gray-300 text-blue-600">
+                            <span class="ml-2 text-sm text-gray-700">Admin</span>
+                        </label>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeModal('editModal')" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Update User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         function openCreateModal() {
-            alert('Create user functionality will be implemented');
+            document.getElementById('createModal').classList.remove('hidden');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
         }
         
         function openEditModal(userId) {
-            alert('Edit user functionality will be implemented');
+            // Get user data and populate form
+            const user = <?php echo json_encode($users); ?>.find(u => u.id === userId);
+            if (user) {
+                document.getElementById('edit_user_id').value = user.id;
+                document.getElementById('edit_username').value = user.username;
+                document.getElementById('edit_email').value = user.email;
+                document.getElementById('edit_first_name').value = user.first_name || '';
+                document.getElementById('edit_last_name').value = user.last_name || '';
+                document.getElementById('edit_is_active').checked = user.is_active;
+                document.getElementById('edit_is_admin').checked = user.is_admin;
+                
+                // Clear and set role checkboxes
+                const roleCheckboxes = document.querySelectorAll('.edit-role-checkbox');
+                roleCheckboxes.forEach(checkbox => {
+                    checkbox.checked = user.roles.includes(checkbox.nextElementSibling.textContent.trim());
+                });
+                
+                document.getElementById('editModal').classList.remove('hidden');
+            }
         }
         
         function toggleUserStatus(userId, isActive) {
@@ -301,6 +464,13 @@ unset($user);
                 `;
                 document.body.appendChild(form);
                 form.submit();
+            }
+        }
+        
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('fixed')) {
+                event.target.classList.add('hidden');
             }
         }
     </script>
