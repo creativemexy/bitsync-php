@@ -180,7 +180,13 @@ class PasswordReset {
             'Reply-To: support@bitsync.com'
         ];
         
-        return mail($to, $subject, $message, implode("\r\n", $headers));
+        // Try to send email, but don't fail if mail server is not configured
+        $emailSent = @mail($to, $subject, $message, implode("\r\n", $headers));
+        
+        // Log the attempt
+        error_log("Password reset email attempt for {$user['email']}: " . ($emailSent ? 'SUCCESS' : 'FAILED - Mail server not configured'));
+        
+        return $emailSent;
     }
     
     /**
@@ -214,7 +220,13 @@ class PasswordReset {
             'Reply-To: support@bitsync.com'
         ];
         
-        return mail($to, $subject, $message, implode("\r\n", $headers));
+        // Try to send email, but don't fail if mail server is not configured
+        $emailSent = @mail($to, $subject, $message, implode("\r\n", $headers));
+        
+        // Log the attempt
+        error_log("Password changed email attempt for {$user['email']}: " . ($emailSent ? 'SUCCESS' : 'FAILED - Mail server not configured'));
+        
+        return $emailSent;
     }
     
     /**
