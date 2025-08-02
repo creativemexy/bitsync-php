@@ -92,6 +92,8 @@ $recentContacts = $db->fetchAll("SELECT name, email, subject, created_at FROM co
                         <a href="chat-management.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Chat Management</a>
                         <a href="blog-posts.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Blog Posts</a>
                         <a href="blog-categories.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Categories</a>
+                        <a href="users.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Users</a>
+                        <a href="roles.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Roles</a>
                     </div>
                 </div>
                 <div class="flex items-center">

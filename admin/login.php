@@ -52,19 +52,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Try database authentication first
             require_once __DIR__ . '/../includes/Database.php';
+            require_once __DIR__ . '/../includes/User.php';
+            
             $db = Database::getInstance();
+            $userManager = new User($db);
             
-            // Get user from database
-            $user = $db->fetchOne(
-                "SELECT id, username, password_hash, is_active FROM users WHERE username = ? AND is_active = true",
-                [$username]
-            );
-            
-            if ($user && password_verify($password, $user['password_hash'])) {
+            if ($userManager->authenticate($username, $password)) {
                 // Database login successful
+                $userData = $userManager->getUserData();
                 $_SESSION['admin_logged_in'] = true;
-                $_SESSION['admin_user_id'] = $user['id'];
-                $_SESSION['admin_username'] = $user['username'];
+                $_SESSION['admin_user_id'] = $userData['id'];
+                $_SESSION['admin_username'] = $userData['username'];
+                $_SESSION['admin_user_data'] = $userData;
+                $_SESSION['admin_permissions'] = $userManager->getPermissions();
                 $_SESSION['auth_method'] = 'database';
                 
                 // Redirect to dashboard
