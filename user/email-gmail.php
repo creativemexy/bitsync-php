@@ -69,7 +69,7 @@ $sentEmails = $emailClient->getSentEmails($_SESSION['user_id'], 20);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email - BitSync Workspace</title>
+    <title>BitSync Mail</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -375,14 +375,7 @@ $sentEmails = $emailClient->getSentEmails($_SESSION['user_id'], 20);
                     if (data.success) {
                         currentEmails = data.data;
                         displayEmails(data.data);
-                    } else {
-                        console.error('Failed to load inbox:', data.error);
-                        displayEmails([]);
                     }
-                })
-                .catch(error => {
-                    console.error('Error loading inbox:', error);
-                    displayEmails([]);
                 });
         }
         
@@ -395,14 +388,7 @@ $sentEmails = $emailClient->getSentEmails($_SESSION['user_id'], 20);
                     if (data.success) {
                         currentEmails = data.data;
                         displayEmails(data.data);
-                    } else {
-                        console.error('Failed to load sent emails:', data.error);
-                        displayEmails([]);
                     }
-                })
-                .catch(error => {
-                    console.error('Error loading sent emails:', error);
-                    displayEmails([]);
                 });
         }
         
@@ -547,71 +533,19 @@ $sentEmails = $emailClient->getSentEmails($_SESSION['user_id'], 20);
         // Toggle star
         function toggleStar(emailId, event) {
             event.stopPropagation();
-            
-            // Find the email in current emails
-            const email = currentEmails.find(e => e.id === emailId);
-            if (!email) return;
-            
-            const isStarred = !email.is_starred;
-            
-            fetch('../email-api.php?action=star', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `email_id=${emailId}&is_starred=${isStarred}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update local email data
-                    email.is_starred = isStarred;
-                    
-                    // Update the star icon
-                    const starIcon = event.target.querySelector('i');
-                    if (starIcon) {
-                        starIcon.classList.toggle('text-yellow-400');
-                    }
-                    
-                    // Refresh current view
-                    if (currentView === 'inbox') loadInbox();
-                    else if (currentView === 'sent') loadSent();
-                    else if (currentView === 'starred') loadStarred();
-                }
-            })
-            .catch(error => {
-                console.error('Error toggling star:', error);
-            });
+            // Implementation for starring emails
         }
         
         // Reply email
         function replyEmail() {
-            if (!selectedEmailId) return;
-            
-            const email = currentEmails.find(e => e.id === selectedEmailId);
-            if (!email) return;
-            
-            // Populate compose form with reply data
-            document.getElementById('to_email').value = email.from_user_id ? email.sender_email || 'recipient@example.com' : email.to_email;
-            document.getElementById('subject').value = `Re: ${email.subject}`;
-            document.getElementById('message').value = `\n\n--- Original Message ---\n${email.message}`;
-            
-            // Show compose modal
-            showCompose();
+            // Implementation for reply
+            alert('Reply functionality coming soon!');
         }
         
         // Forward email
         function forwardEmail() {
-            if (!selectedEmailId) return;
-            
-            const email = currentEmails.find(e => e.id === selectedEmailId);
-            if (!email) return;
-            
-            // Populate compose form with forward data
-            document.getElementById('to_email').value = '';
-            document.getElementById('subject').value = `Fwd: ${email.subject}`;
-            document.getElementById('message').value = `\n\n--- Forwarded Message ---\nFrom: ${email.sender_name || 'Unknown'}\nDate: ${new Date(email.created_at).toLocaleString()}\nSubject: ${email.subject}\n\n${email.message}`;
-            
-            // Show compose modal
-            showCompose();
+            // Implementation for forward
+            alert('Forward functionality coming soon!');
         }
         
         // Delete email
@@ -626,41 +560,14 @@ $sentEmails = $emailClient->getSentEmails($_SESSION['user_id'], 20);
                         closeEmailView();
                         if (currentView === 'inbox') loadInbox();
                         else if (currentView === 'sent') loadSent();
-                        else if (currentView === 'starred') loadStarred();
-                        else if (currentView === 'trash') loadTrash();
                     }
-                })
-                .catch(error => {
-                    console.error('Error deleting email:', error);
                 });
             }
         }
         
         // Save draft
         function saveDraft() {
-            const toEmail = document.getElementById('to_email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
-            
-            if (!subject && !message) {
-                alert('Please add a subject or message to save as draft');
-                return;
-            }
-            
-            // Store draft in localStorage for now (could be enhanced with API)
-            const draft = {
-                to_email: toEmail,
-                subject: subject,
-                message: message,
-                created_at: new Date().toISOString()
-            };
-            
-            let drafts = JSON.parse(localStorage.getItem('emailDrafts') || '[]');
-            drafts.push(draft);
-            localStorage.setItem('emailDrafts', JSON.stringify(drafts));
-            
-            alert('Draft saved successfully!');
-            closeCompose();
+            alert('Draft functionality coming soon!');
         }
         
         // Refresh emails
